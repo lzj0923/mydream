@@ -1,0 +1,177 @@
+/* Navigation pages share one composition; CMS still owns their copy and media. */
+:root {
+  --nav-heading-font: Inter, "Noto Sans TC", "PingFang TC", "Microsoft JhengHei", Arial, sans-serif;
+  --nav-heading-primary-color: #f4c542;
+  --nav-heading-secondary-color: #f5f7ff;
+  --nav-heading-body-color: #c5d1e0;
+}
+[data-nav-hero] {
+  position:relative !important;
+  box-sizing:border-box;
+  width:100% !important;
+  max-width:none !important;
+  height:max(var(--nav-height,620px),var(--nav-fit-height,0px)) !important;
+  min-height:max(var(--nav-height,620px),var(--nav-fit-height,0px)) !important;
+  padding:0 !important;
+  overflow:hidden;
+}
+[data-nav-hero] :is(.jyg-home-hero__content,.jyg-ai-hub-hero__grid,.jyg-pricing-hero__content,.jyg-contact-hero__grid,.v2-page-hero__inner) {
+  position:static !important;
+  transform:none !important;
+}
+[data-nav-hero] [data-nav-hero-copy] {
+  position:absolute !important;
+  inset:var(--nav-top,110px) auto auto max(var(--nav-left,32px),calc((100% - 1360px) / 2)) !important;
+  width:min(var(--nav-width,720px),calc(100% - 64px)) !important;
+  max-width:none !important;
+  height:auto !important;
+  padding:0 !important;
+  margin:0 !important;
+  transform:none !important;
+  display:flex !important;
+  flex-direction:column;
+  align-items:flex-start !important;
+  gap:var(--nav-gap,14px) !important;
+  text-align:left !important;
+  z-index:3;
+}
+[data-nav-hero] [data-nav-hero-copy] > :is([data-cms-field="eyebrow"],.jyg-eyebrow,.v2-breadcrumbs) { display:none !important; }
+[data-nav-hero] [data-nav-hero-copy] > :is([data-cms-field="title"],[data-cms-field="subtitle"],[data-cms-field="description"]) {
+  width:100%;
+  max-width:none !important;
+  margin:0 !important;
+  padding:0 !important;
+  font-family:var(--nav-heading-font) !important;
+  font-weight:400 !important;
+  font-style:normal !important;
+  text-shadow:none !important;
+  text-transform:none !important;
+  background:none !important;
+  -webkit-text-fill-color:currentColor !important;
+  letter-spacing:.02em !important;
+  white-space:pre-line;
+  overflow-wrap:anywhere;
+  transform:none !important;
+}
+[data-nav-hero] [data-nav-hero-copy] > [data-cms-field="title"] { font-size:var(--nav-titleSize,56px) !important; line-height:1.15 !important; color:var(--nav-titleColor,#f4c542) !important; }
+[data-nav-hero] [data-nav-hero-copy] > [data-cms-field="subtitle"] { font-size:var(--nav-subtitleSize,24px) !important; line-height:1.5 !important; color:var(--nav-subtitleColor,#f5f7ff) !important; }
+[data-nav-hero] [data-nav-hero-copy] > [data-cms-field="description"] { font-size:var(--nav-bodySize,16px) !important; line-height:1.8 !important; color:var(--nav-bodyColor,#c5d1e0) !important; }
+[data-nav-hero] [data-nav-hero-copy] > :is([data-cms-field="subtitle"],[data-cms-field="description"]):empty { display:none !important; }
+[data-nav-hero] .jyg-global-hero-background__image { transform:none !important; object-fit:cover; }
+[data-page="professional-rights-taiwan"] { padding:0 0 42px !important; }
+[data-page="professional-rights-taiwan"] [data-nav-hero] { border:0; border-radius:0; margin:0; display:block; }
+@media(max-width:700px) {
+  [data-nav-hero] { height:max(var(--nav-mobileHeight,560px),var(--nav-fit-height,0px)) !important; min-height:max(var(--nav-mobileHeight,560px),var(--nav-fit-height,0px)) !important; }
+  [data-nav-hero] [data-nav-hero-copy] { inset:var(--nav-mobileTop,72px) auto auto 20px !important; width:calc(100% - 40px) !important; gap:var(--nav-gap,14px) !important; }
+  [data-nav-hero] [data-nav-hero-copy] > [data-cms-field="title"] { font-size:var(--nav-mobileTitleSize,38px) !important; }
+  [data-nav-hero] [data-nav-hero-copy] > [data-cms-field="subtitle"] { font-size:var(--nav-mobileSubtitleSize,20px) !important; }
+  [data-nav-hero] [data-nav-hero-copy] > [data-cms-field="description"] { font-size:var(--nav-mobileBodySize,14px) !important; }
+  /* The service notice stays readable when its longer copy needs extra rows. */
+  [data-page="professional-rights-taiwan"] [data-nav-hero] { height:auto !important; }
+  [data-page="professional-rights-taiwan"] [data-nav-hero-copy] { position:relative !important; inset:auto !important; margin:72px 20px 32px !important; }
+}
+
+/* Longer rights-service copy must remain in flow so actions cannot be clipped. */
+[data-page="professional-rights-taiwan"] [data-nav-hero] {
+  height:auto !important;
+}
+[data-page="professional-rights-taiwan"] [data-nav-hero-copy] {
+  position:relative !important;
+  inset:auto !important;
+  margin:0 0 0 max(var(--nav-left,32px),calc((100% - 1360px) / 2)) !important;
+  padding:var(--nav-top,110px) 0 48px !important;
+  width:min(var(--nav-width,720px),calc(100% - 64px)) !important;
+}
+[data-page="professional-rights-taiwan"] [data-nav-hero-copy] > [data-cms-field="title"] {
+  font-size:var(--nav-titleSize,56px) !important;
+  text-wrap:balance;
+}
+@media(max-width:700px) {
+  [data-page="professional-rights-taiwan"] [data-nav-hero-copy] {
+    margin:0 20px !important;
+    padding:var(--nav-mobileTop,72px) 0 32px !important;
+    width:calc(100% - 40px) !important;
+  }
+}
+
+@media(max-width:700px) { [data-page="professional-rights-taiwan"] [data-nav-hero-copy] > [data-cms-field="title"] { font-size:var(--nav-mobileTitleSize,38px) !important; } }
+[data-page="creator-id-landing"] [data-nav-hero] > div:has(> [data-nav-hero-copy]) { position:static; }
+[data-page="creator-id-landing"] [data-nav-hero-visual] { grid-column:2; }
+
+/* The certification hero is a two-column composition, not an overlaid background. */
+[data-page="creator-id-landing"] [data-nav-hero] { height:auto !important; }
+[data-page="creator-id-landing"] [data-nav-hero] > div:has(> [data-nav-hero-copy]) {
+  position:relative !important;
+  width:min(1360px,calc(100% - 64px));
+  height:auto !important;
+  margin:0 auto;
+  padding:var(--nav-top,110px) 0 48px;
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) minmax(0,1fr);
+  align-items:center;
+  gap:32px;
+}
+[data-page="creator-id-landing"] [data-nav-hero-copy] {
+  position:relative !important;
+  inset:auto !important;
+  width:min(var(--nav-width,720px),100%) !important;
+  padding:0 !important;
+  margin:0 !important;
+  grid-column:1;
+  grid-row:1;
+  z-index:4;
+}
+[data-page="creator-id-landing"] [data-nav-hero-visual] {
+  position:relative !important;
+  inset:auto !important;
+  width:100% !important;
+  height:auto !important;
+  min-height:0 !important;
+  margin:0 !important;
+  grid-column:2;
+  grid-row:1;
+  z-index:1;
+}
+[data-page="creator-id-landing"] [data-nav-hero-visual] > img { width:100% !important; height:auto !important; object-fit:contain; }
+[data-page="creator-id-landing"] [data-nav-hero-visual]::after { display:none; }
+[data-page="creator-id-landing"] [data-nav-hero-actions] { position:relative !important; inset:auto !important; margin:12px 0 0; flex-wrap:wrap; max-width:100%; }
+@media(max-width:900px) {
+  [data-page="creator-id-landing"] [data-nav-hero] > div:has(> [data-nav-hero-copy]) { width:calc(100% - 40px); grid-template-columns:minmax(0,1fr); padding:var(--nav-mobileTop,72px) 0 32px; }
+  [data-page="creator-id-landing"] [data-nav-hero-visual] { grid-column:1; grid-row:2; max-width:640px; justify-self:center; }
+}
+
+
+/* Center the full copy group, including actions, in every primary navigation hero. */
+[data-nav-hero-centered]:not([data-nav-hero-centered="columns"]) [data-nav-hero-copy] {
+  top:50% !important;
+  bottom:auto !important;
+  transform:translateY(-50%) !important;
+}
+[data-page="creator-id-landing"] [data-nav-hero-centered="columns"] > div:has(> [data-nav-hero-copy]) {
+  box-sizing:border-box;
+  min-height:var(--nav-height,620px);
+  padding:40px 0;
+  align-content:center;
+}
+@media(max-width:900px) {
+  [data-page="creator-id-landing"] [data-nav-hero-centered="columns"] > div:has(> [data-nav-hero-copy]) {
+    padding:40px 0;
+  }
+}
+@media(max-width:700px) {
+  [data-page="creator-id-landing"] [data-nav-hero-centered="columns"] > div:has(> [data-nav-hero-copy]) {
+    min-height:var(--nav-mobileHeight,560px);
+  }
+}
+
+/* Long service copy stays in flow while the complete group is vertically centered. */
+[data-page="professional-rights-taiwan"] [data-nav-hero-centered="flow"] {
+  display:flex !important;
+  align-items:center;
+}
+[data-page="professional-rights-taiwan"] [data-nav-hero-centered="flow"] [data-nav-hero-copy] {
+  top:auto !important;
+  bottom:auto !important;
+  transform:none !important;
+  padding:40px 0 !important;
+}

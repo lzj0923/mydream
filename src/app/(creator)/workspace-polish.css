@@ -1,0 +1,116 @@
+/* Small layout corrections; preserve the reference platform's visual system. */
+/* Shared readable type scale; override older panel-specific 10–13px text. */
+.cw-app{font-size:15px}
+.cw-app .cw-main :is(p,label,input,select,textarea,button,summary,td,dd,dt),
+.cw-app :is(.cw-menu-item,.cw-nav-group,.cw-top-nav button),
+.cw-app .cw-modal :is(p,label,input,select,textarea,button,dd,dt){font-size:15px!important}
+.cw-app .cw-main :is(p,label,dd,dt){line-height:1.65}
+.cw-app .cw-main :is(h1,h2),.cw-app .cw-modal h2{font-size:20px!important;line-height:1.5}
+.cw-app .cw-main h1{font-size:24px!important;font-weight:600;line-height:1.4}
+.cw-app .cw-main h3{font-size:17px!important;line-height:1.5}
+.cw-app .cw-main h4{font-size:16px!important;line-height:1.5}
+.cw-app .cw-main :is(.cw-help-hero,.cw-ranking-hero) h1{font-size:32px!important}
+.cw-app :is(.cw-main,.cw-modal) :is(small,time,th),
+.cw-app :is(.cw-user small,.cw-back-site,.cp-stage,.cn-kind,.cp-settings-status,.agreement-badge),
+.cw-app .cw-main :is(.cw-video-hint,.cw-muted,.cw-footer,.cu-context-footer,.cp-settings-footer,.cp-settings-values) :is(span,a),
+.cw-app .cw-main :is(.cw-upload-steps li,.cu-context-fields>label,.cw-upload-media-title>span,.ca-kpis span,.cw-metric>div span,.cw-chart-legend){font-size:13px!important;line-height:1.6}
+.cw-app .cw-main :is(.cp-submission-list a,.cp-project strong,.cw-work h3,.cu-context-footer a,.cn-center article a){font-size:15px!important}
+.cw-app .cw-main :is(.cw-video-hint,.cu-context-notice,.cu-context-error){font-size:14px!important}
+.cw-app .cw-main :is(input,select):not([type=checkbox]):not([type=radio]):not([type=file]){min-height:42px}
+.cw-app .cw-main textarea{line-height:1.65}
+.cw-app .cw-main :is(.cw-card-title,.cp-head,.ca-card-head){flex-wrap:wrap;row-gap:10px}
+.cw-app .cw-main :is(.cw-upload-steps,.cw-tabs,.cn-center>nav){row-gap:12px}
+.cw-app .cw-main .cw-upload-steps li{white-space:normal}
+.cw-app .cw-main .cw-upload-steps li>span{flex-shrink:0}
+.cw-app .cw-main .cu-context-header{flex-wrap:wrap;gap:8px}
+.cw-app .cw-main .cw-footer{gap:14px;flex-wrap:wrap}
+.cw-app .cw-main :is(.cw-table,.ca-details table){font-variant-numeric:tabular-nums}
+@media(max-width:760px){
+ .cw-app .cw-main :is(input,select,textarea):not([type=checkbox]):not([type=radio]){font-size:16px!important}
+ .cw-app .cw-main h1{font-size:22px!important}
+ .cw-app .cw-main h2{font-size:19px!important}
+ .cw-app .cw-main :is(.cw-help-hero,.cw-ranking-hero) h1{font-size:26px!important}
+}
+.cw-app .cp-head>div:first-child{margin-right:auto}
+.cw-app .cw-home-scripts{min-height:0}
+/* Keep the reference upload flow, but size video panels to their content. */
+.cw-app .cw-video-manager{gap:16px}
+.cw-app .cw-video-manager .cw-video-form,
+.cw-app .cw-video-manager>.cp-center{min-height:0}
+.cw-app .cw-video-manager .cw-upload-title{margin-bottom:12px}
+.cw-app .cw-video-manager .cw-upload-steps{width:100%;margin:0 auto 24px;padding:12px 0}
+.cw-app .cw-video-manager .cw-video-editor--steps{width:100%;flex:none;margin:0 auto}
+.cw-app .cw-video-manager .cw-video-editor--steps .cw-video-fields{flex:none;gap:12px}
+.cw-app .cw-video-manager .cw-upload-step-actions{position:static;margin-top:8px;padding:16px 0 0;border-top:1px solid #eee}
+.cw-app .cw-video-manager .cw-upload-step-actions:empty{display:none}
+.cw-app .cw-video-manager .cu-context-card{max-width:none;margin-bottom:20px}
+.cw-app .cw-video-manager .cu-context-header{padding:12px 18px}
+.cw-app .cw-video-manager .cu-context-fields{padding:16px 18px;gap:16px}
+.cw-app .cw-video-manager .cu-context-footer{padding:10px 18px;gap:10px;flex-wrap:wrap}
+.cw-app .cw-video-manager .cw-upload-basic{gap:16px}
+.cw-app .cw-video-manager .cw-upload-basic textarea{min-height:96px}
+.cw-app .cw-video-manager .cw-video-editor--steps .cw-video-cover{margin-top:0;padding:14px 16px}
+.cw-app .cw-video-manager .cw-video-cover-preview{margin:0}
+.cw-app .cw-video-manager .cw-video-empty{min-height:0;padding:24px 12px}
+.cw-app .cw-video-manager>.cw-card>.cw-card-title{margin-bottom:16px}
+/* Use the available panel width instead of centering a narrow form. */
+.cw-app .cw-video-manager .cw-upload-steps{max-width:1100px;margin-left:0;margin-bottom:20px}
+.cw-app .cw-video-manager .cu-required-heading{margin:0;font-size:15px}
+.cw-app .cw-video-manager .cw-upload-details{display:grid;grid-template-columns:minmax(0,2fr) minmax(260px,1fr);gap:24px;align-items:start}
+.cw-app .cw-video-manager .cw-upload-copy{display:grid;gap:16px;min-width:0}
+.cw-app .cw-video-manager .cw-upload-copy>label{display:grid;gap:8px;font-size:13px;min-width:0}
+.cw-app .cw-video-manager .cw-upload-cover-column{display:grid;gap:10px;min-width:0}
+.cw-app .cw-video-manager .cw-upload-cover-column .cw-video-cover{min-height:156px;justify-content:center;flex-direction:column;text-align:center}
+.cw-app .cw-video-manager .cw-upload-cover-column .cw-video-cover small{text-align:center}
+.cw-app .cw-video-manager .cw-upload-cover-column .cw-video-cover-preview{width:100%;max-width:100%;margin:0;height:150px}
+@media(min-width:1101px){
+ .cw-app .cw-video-manager .cw-upload-step-actions{padding-right:88px}
+ .cw-app .cw-video-manager .cu-context-card{display:grid;grid-template-columns:320px minmax(0,1fr)}
+ .cw-app .cw-video-manager .cu-context-header{border-bottom:0;border-right:1px solid #edf0f4}
+ .cw-app .cw-video-manager .cu-context-footer,.cw-app .cw-video-manager .cu-context-error,.cw-app .cw-video-manager .cu-context-notice{grid-column:1/-1}
+}
+@media(max-width:1000px){
+ .cw-app .cw-video-manager .cw-upload-details{grid-template-columns:1fr;gap:16px}
+ .cw-app .cw-video-manager .cw-upload-cover-column .cw-video-cover{min-height:96px}
+}
+@media(max-width:760px){
+ .cw-app .cw-video-manager .cw-upload-steps{margin-bottom:18px;gap:12px 8px}
+ .cw-app .cw-video-manager .cu-context-header{padding:12px}
+ .cw-app .cw-video-manager .cu-context-fields{padding:12px;gap:12px}
+ .cw-app .cw-video-manager .cu-context-footer{padding:10px 12px}
+ .cw-app .cw-welcome-banner{display:grid;grid-template-columns:48px minmax(0,1fr);gap:12px;position:relative}
+ .cw-app .cw-welcome-banner>div:nth-child(2){min-width:0;padding-right:16px}
+ .cw-app .cw-welcome-banner h2{white-space:normal;overflow-wrap:break-word}
+ .cw-app .cw-welcome-banner>.cw-primary{grid-column:2;justify-self:start;margin-left:0}
+ .cw-app .cw-welcome-banner>.cw-icon-button{position:absolute;top:14px;right:12px;margin:0}
+ .cw-app .cp-head{flex-wrap:wrap}
+ .cw-app .cp-head>div:first-child{flex:1 1 100%}
+ .cw-app .cp-head>button:last-child{margin-left:auto}
+}
+
+/* Alignment follows the content role rather than a blanket page setting. */
+.cw-app .cw-main .cw-page-title{margin:0;display:flex;align-items:center;gap:10px;text-align:left;color:#202124;letter-spacing:0}
+.cw-app .cw-main :is(.cw-card-title,.cp-head,.ct-heading,.ca-account-heading,.ce-heading,.ca-heading,.cn-center>header){text-align:left;align-items:center;gap:16px}
+.cw-app .cw-main :is(.cw-card-title,.cp-head,.ce-heading)>.cw-page-title{margin-right:auto}
+.cw-app .cw-main :is(.ct-heading,.ca-account-heading,.ca-heading,.cn-center>header) p{margin:6px 0 0;color:#667085;font-weight:400}
+.cw-app .cw-main :is(.cw-card-title h2,.ca-card-head h3,.ct-section-title h3,.ca-account-section h3){font-size:19px!important;font-weight:600;text-align:left}
+.cw-app .cw-main :is(.cu-context-header h3,.cu-required-heading,.cn-notice-heading h3){font-size:17px!important;font-weight:600;text-align:left}
+.cw-app .cw-main :is(.cw-editor,.cw-profile-form,.ca-account-section,.ct-invite-form) :is(label,input,textarea,select){text-align:left}
+.cw-app .cw-main :is(.cw-help-hero,.cw-ranking-hero){text-align:center}
+.cw-app .cw-main :is(.cw-film-empty,.cw-home-empty,.cw-video-empty,.cp-empty,.ct-empty,.cn-empty,.ce-empty){text-align:center}
+.cw-app .cw-main :is(.cw-film-empty,.cp-empty,.ct-empty,.cn-empty)>svg{margin-inline:auto}
+.cw-app .cw-main :is(.cw-film-empty,.cp-empty,.ct-empty) p{max-width:560px;margin-inline:auto}
+.cw-app .cw-main :is(.cw-table,.cw-settlement-table) :is(th,td){text-align:left;vertical-align:middle}
+.cw-app .cw-main .cw-settlement-table .cw-cell-number{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}
+.cw-app .cw-main .cw-settlement-table .cw-cell-status{text-align:center;white-space:nowrap}
+.cw-app .cw-main .cw-settlement-table .ce-empty{text-align:center}
+.cw-app .cw-main :is(.cw-metric strong,.ce-total strong,.ca-kpis strong){font-variant-numeric:tabular-nums;line-height:1.2}
+.cw-app .cw-main .cw-video-manager .cw-upload-cover-column .cw-video-cover{text-align:center}
+.cw-app .cw-main .cw-upload-step-actions{justify-content:flex-end}
+.cw-app .cw-modal-head{text-align:left}
+.cw-app .cw-welcome-banner .cw-page-title{font-size:24px!important}
+@media(max-width:760px){
+ .cw-app .cw-main :is(.ce-heading,.cn-center>header,.ca-account-heading){flex-wrap:wrap;row-gap:10px}
+ .cw-app .cw-main .cw-page-title{font-size:22px!important}
+ .cw-app .cw-welcome-banner .cw-page-title{font-size:20px!important;white-space:normal;overflow-wrap:break-word}
+}

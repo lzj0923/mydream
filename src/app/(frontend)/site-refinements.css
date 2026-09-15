@@ -1,0 +1,69 @@
+/* Public content readability. Shared by the website and CMS preview. */
+.jyg-ai-hub-page .jyg-ai-hub-content-card__copy { min-height: 130px; padding: 18px; }
+.jyg-ai-hub-page .jyg-ai-hub-content-card__copy > strong { font-size: 18px; line-height: 1.55; }
+.jyg-ai-hub-page .jyg-ai-hub-content-card__copy > small,
+.jyg-ai-hub-page .jyg-ai-hub-content-card__copy > span b { font-size: 13px; line-height: 1.6; font-weight: 400; }
+.jyg-ai-hub-page .jyg-ai-hub-content-card__copy > span { flex-wrap: wrap; }
+.jyg-ai-hub-page .jyg-ai-hub-category-card { height: auto; min-height: 220px; }
+.jyg-ai-hub-page .jyg-ai-hub-category-card h3 { font-size: 25px; }
+.jyg-ai-hub-page .jyg-ai-hub-category-card p,
+.jyg-ai-hub-page .jyg-ai-hub-category-card b { font-size: 16px; line-height: 1.7; }
+.jyg-ai-hub-page .jyg-ai-hub-category-card b { min-height: 42px; }
+
+.jyg-business-collab-page .jyg-business-collab-card { height: auto; min-height: 0; }
+.jyg-business-collab-page .jyg-business-collab-card h2 { font-size: 30px; line-height: 1.5; }
+.jyg-business-collab-page .jyg-business-collab-card > p,
+.jyg-business-collab-page .jyg-business-collab-tracks p,
+.jyg-business-collab-page .jyg-business-collab-trust { font-size: 16px; line-height: 1.8; }
+.jyg-business-collab-page .jyg-business-collab-tracks h3 { font-size: 20px; }
+.jyg-business-collab-page .jyg-business-collab-tracks article { height: auto; padding-block: 18px; }
+.jyg-business-collab-page .jyg-business-collab-message textarea,
+.jyg-business-collab-page .jyg-business-collab-agreement { font-size: 16px; line-height: 1.7; }
+
+.jyg-video-detail-page .jyg-video-detail-back { font-size: 16px; }
+.jyg-video-detail-page .jyg-video-detail-heading dt,
+.jyg-video-detail-page .jyg-video-detail-heading dd { font-size: 16px; line-height: 1.6; }
+.jyg-video-library-page .jyg-video-card h2 { font-size: 18px; line-height: 1.65; overflow-wrap: anywhere; }
+.jyg-work-detail-page .jyg-work-episode-player > header span { font-size: 16px; }
+.jyg-work-detail-page .jyg-work-episode-player > header h2 { font-size: 24px; line-height: 1.5; }
+
+/* Keep the artwork visible: remove the stacked dark filters and heavy scrims. */
+.jyg-video-library-page .jyg-video-library-hero__art { filter: none; object-fit: contain; object-position: right center; }
+.jyg-video-library-page .jyg-video-library-hero__veil { background: linear-gradient(90deg, rgba(2,7,17,.8), rgba(2,7,17,.38) 50%, rgba(2,7,17,.08)); }
+.v2-article-page .v2-page-hero__background { filter: none; object-fit: cover; object-position: center; }
+.v2-article-page .v2-page-hero__scrim { background: linear-gradient(90deg, rgba(5,9,20,.9), rgba(5,9,20,.65) 48%, rgba(5,9,20,.12)), linear-gradient(0deg, #050914, transparent 35%); }
+.v2-article-page .v2-page-hero__copy { text-shadow: 0 2px 8px #020711; }
+.v2-download-page .v2-store-card__disabled,
+.v2-download-page .v2-store-card__copy p { font-size: 16px; line-height: 1.7; }
+
+.jyg-tasks-page .consumer-rights-readable { width: 90%; margin: auto; padding: 36px 0; display: grid; grid-template-columns: minmax(0, 1fr) 230px; align-items: center; gap: 36px; }
+.consumer-rights-readable h2 { display: flex; align-items: center; gap: 16px; margin: 0 0 24px; color: #ffce49; font-size: 32px; font-weight: 400; line-height: 1.5; }
+.consumer-rights-readable h2 svg { width: 48px; height: 48px; flex: none; color: #00d9f4; }
+.consumer-rights-readable ol { margin: 0; padding: 0; list-style: none; display: grid; gap: 20px; }
+.consumer-rights-readable li { display: grid; grid-template-columns: 40px minmax(0, 1fr); gap: 18px; align-items: start; }
+.consumer-rights-readable li > span { width: 40px; height: 40px; border: 1px solid #00d9f4; border-radius: 50%; display: grid; place-items: center; color: #54efff; font-size: 24px; line-height: 1; box-shadow: 0 0 14px #00d9f422; }
+.consumer-rights-readable li p { margin: 4px 0 0; color: #e6eef7; font-size: 18px; line-height: 1.8; }
+.consumer-rights-readable__shield { aspect-ratio: 1; display: grid; place-items: center; border: 1px solid #00c8f5; border-radius: 50%; box-shadow: 0 0 0 24px #00c8f50a, 0 0 0 48px #00c8f505, inset 0 0 50px #00c8f533; }
+.consumer-rights-readable__shield svg { width: 130px; height: 130px; color: #00d9f4; filter: drop-shadow(0 0 12px #00c8f5); stroke-width: 1.2; }
+
+@media (max-width: 700px) {
+  .v2-download-page .v2-store-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }
+  .jyg-video-library-page .jyg-video-card h2 { font-size: 17px; }
+  .jyg-video-detail-page .jyg-video-detail-heading h1 { font-size: 24px; line-height: 1.5; overflow-wrap: anywhere; }
+  .jyg-video-detail-page .jyg-video-detail-heading p { font-size: 15px; line-height: 1.8; }
+  .jyg-work-detail-page .jyg-work-episode-player > header h2 { font-size: 21px; }
+  .jyg-ai-hub-page .jyg-ai-hub-category-card h3 { font-size: 23px; }
+  .jyg-about-exact .jyg-about-exact__story { height: auto; min-height: 620px; display: flex; align-items: center; padding: 64px 22px; }
+  .jyg-about-exact .jyg-about-exact__story > div { position: relative; inset: auto; width: 100%; transform: none; }
+  .jyg-about-exact .jyg-about-exact__story p,
+  .jyg-about-exact .jyg-about-exact__future-copy p,
+  .jyg-about-exact .jyg-about-exact__characters > header p { font-size: 14px; line-height: 1.8; }
+  .jyg-about-exact .jyg-about-exact__future-copy > strong { font-size: 20px; line-height: 1.5; }
+  .jyg-tasks-page .consumer-rights-readable { width: auto; margin: 0; padding: 26px 18px; display: block; }
+  .consumer-rights-readable h2 { gap: 10px; font-size: 24px; margin-bottom: 24px; }
+  .consumer-rights-readable h2 svg { width: 34px; height: 34px; }
+  .consumer-rights-readable li { grid-template-columns: 30px minmax(0, 1fr); gap: 12px; }
+  .consumer-rights-readable li > span { width: 30px; height: 30px; font-size: 18px; }
+  .consumer-rights-readable li p { margin: 0; font-size: 16px; line-height: 1.85; }
+  .consumer-rights-readable__shield { display: none; }
+}

@@ -1,0 +1,49 @@
+CREATE TABLE cms_creator_profile (
+  owner_key VARCHAR(191) NOT NULL PRIMARY KEY,
+  display_name VARCHAR(80) NOT NULL,
+  bio VARCHAR(1000) NOT NULL DEFAULT '',
+  specialty VARCHAR(120) NOT NULL DEFAULT '',
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE cms_creator_script (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  owner_key VARCHAR(191) NOT NULL,
+  title VARCHAR(120) NOT NULL,
+  genre VARCHAR(40) NOT NULL,
+  format VARCHAR(40) NOT NULL,
+  episode_count INT NOT NULL,
+  synopsis TEXT NOT NULL,
+  body MEDIUMTEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'DRAFT',
+  review_note VARCHAR(1000) NOT NULL DEFAULT '',
+  lock_version INT NOT NULL DEFAULT 0,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  submitted_at TIMESTAMP NULL,
+  reviewed_at TIMESTAMP NULL,
+  reviewer VARCHAR(191) NULL,
+  INDEX idx_creator_owner (owner_key, updated_at),
+  INDEX idx_creator_review (status, submitted_at)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE cms_creator_ip_interest (
+  id CHAR(36) NOT NULL PRIMARY KEY,
+  owner_key VARCHAR(191) NOT NULL,
+  work_slug VARCHAR(180) NOT NULL,
+  work_title VARCHAR(200) NOT NULL,
+  format VARCHAR(40) NOT NULL,
+  proposal TEXT NOT NULL,
+  status VARCHAR(20) NOT NULL DEFAULT 'PENDING',
+  review_note VARCHAR(1000) NOT NULL DEFAULT '',
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_creator_interest (owner_key,work_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE cms_creator_favorite (
+  owner_key VARCHAR(191) NOT NULL,
+  work_slug VARCHAR(180) NOT NULL,
+  created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (owner_key,work_slug)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;

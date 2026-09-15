@@ -1,0 +1,14 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {synchronizeProject} from '../src/lib/creator-video/project-sync.ts';
+function fixture(){
+ const drama={id:1,area:'zhf',is_landscape:0,unlock_price:0,typerelation:[{type_id:'22'}],title:'Keep title',cover_image:'keep.jpg',status:'normal'};
+ const episodes=[{id:2,drama_id:1,drama_num:1,unlock_price:0,status:'normal',video_url:'keep.mp4'},{id:3,drama_id:1,drama_num:2,unlock_price:0,status:'normal',video_url:'other.mp4'}];
+ const writes:{route:string;fields:string[]}[]=[];let fail=false;
+ const gateway={async get(route:string,html?:boolean){if(html)return '<select name="row[area]"><option value="en">English</option></select><select name="type[]"><option value="64">Category</option></select><input name="row[unlock_price]">';const query=new URLSearchParams(route.split('?')[1]);const id=JSON.parse(query.get('filter')!).id;return {rows:route.includes('/drama/')?[structuredClone(drama)]:episodes.filter(e=>e.id===id).map(e=>({...e}))};},async post(route:string,body:URLSearchParams){if(fail&&route.endsWith('/3'))throw Error('simulated interruption');writes.push({route,fields:[...body.keys()]});if(route.includes('/drama/')){drama.area=body.get('row[area]')!;drama.is_landscape=Number(body.get('row[is_landscape]'));drama.unlock_price=Number(body.get('row[unlock_price]'));drama.typerelation=[{type_id:body.get('type[]')!}];}else episodes.find(e=>route.endsWith('/'+e.id))!.unlock_price=Number(body.get('row[unlock_price]'));}};
+ const snapshot={settings:{area:'en',category:'64',landscape:true,price:10},publications:[{dramaId:1,episodeId:2,episodeNumber:1},{dramaId:1,episodeId:3,episodeNumber:2}]};
+ return {drama,episodes,writes,gateway,snapshot,setFail(value:boolean){fail=value;}};
+}
+test('sync changes only settings and linked episode prices; repeat does not write',async()=>{const f=fixture();await synchronizeProject(f.gateway,f.snapshot);assert.equal(f.writes.length,3);assert.equal(f.drama.title,'Keep title');assert.equal(f.drama.cover_image,'keep.jpg');assert.equal(f.episodes[0].video_url,'keep.mp4');assert.equal(f.episodes[0].status,'normal');assert.deepEqual(f.writes[1].fields,['row[unlock_price]']);await synchronizeProject(f.gateway,f.snapshot);assert.equal(f.writes.length,3);});
+test('invalid episode ownership prevents every write',async()=>{const f=fixture();f.episodes[1].drama_id=999;await assert.rejects(synchronizeProject(f.gateway,f.snapshot),/歸屬/);assert.equal(f.writes.length,0);});
+test('retry finishes remaining writes after partial failure',async()=>{const f=fixture();f.setFail(true);await assert.rejects(synchronizeProject(f.gateway,f.snapshot),/interruption/);assert.equal(f.writes.length,2);f.setFail(false);await synchronizeProject(f.gateway,f.snapshot);assert.equal(f.writes.length,3);assert.ok(f.episodes.every(e=>e.unlock_price===10));});

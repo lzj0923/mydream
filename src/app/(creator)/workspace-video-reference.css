@@ -1,0 +1,60 @@
+/* Upload form follows the supplied creator-platform reference. */
+.cw-app .cw-video-manager .cw-video-form{padding:24px 28px 32px}
+.cw-app .cw-video-manager .cw-upload-title{justify-content:flex-start;gap:10px;margin-bottom:32px}
+.cw-app .cw-video-manager .cw-upload-title h1{font-size:20px!important;font-weight:500;line-height:1.5}
+.cw-app .cw-video-manager :is(.cw-upload-steps,.cw-video-editor--steps,.cu-context-card){width:100%;max-width:980px;margin-inline:auto}
+.cw-app .cw-video-manager .cw-upload-steps{margin-bottom:36px;padding:0;gap:16px}
+.cw-app .cw-video-manager .cw-upload-steps li{font-size:15px!important;font-weight:400}
+.cw-app .cw-video-manager .cw-video-editor--steps{display:block}
+.cw-app .cw-video-manager .cu-context-card{display:block;margin-bottom:32px;border:0;border-bottom:1px solid #eee;border-radius:0;box-shadow:none;background:transparent;padding-bottom:20px}
+.cw-app .cw-video-manager .cu-context-header{padding:0 0 16px;border:0;background:none}
+.cw-app .cw-video-manager .cu-context-icon{display:none}
+.cw-app .cw-video-manager .cu-context-header h3{font-size:16px!important;font-weight:500}
+.cw-app .cw-video-manager .cu-context-title p{display:none}
+.cw-app .cw-video-manager .cu-context-fields{padding:0;gap:24px;grid-template-columns:minmax(0,1fr) 276px}
+.cw-app .cw-video-manager .cu-context-fields.is-independent{grid-template-columns:minmax(0,1fr)}
+.cw-app .cw-video-manager .cu-context-fields>label:nth-child(2){grid-template-columns:88px minmax(0,1fr)}
+.cw-app .cw-video-manager .cu-context-fields>label:nth-child(2)>span{display:flex;flex-direction:column;align-items:flex-start;gap:2px;white-space:nowrap}
+.cw-app .cw-video-manager .cu-episode-input{width:100%;min-width:144px;max-width:188px;gap:8px}
+.cw-app .cw-video-manager .cu-episode-input input{min-width:64px;flex:1;text-align:center}
+.cw-app .cw-video-manager .cu-context-fields>label{display:grid;grid-template-columns:136px minmax(0,1fr);align-items:center;gap:0}
+.cw-app .cw-video-manager .cu-context-footer{padding:12px 0 0 136px;background:none;border:0}
+.cw-app .cw-video-manager .cw-upload-basic{gap:24px}
+.cw-app .cw-video-manager .cu-required-heading{font-size:17px!important;font-weight:500;margin:0 0 8px}
+.cw-app .cw-video-manager .cu-required-heading small{margin-left:12px;font-size:13px!important;font-weight:400;color:#929292}
+.cw-app .cw-video-manager .cw-upload-details{display:block}
+.cw-app .cw-video-manager .cw-upload-copy{gap:24px}
+.cw-app .cw-video-manager .cw-upload-copy>label{display:grid;grid-template-columns:136px minmax(0,1fr);gap:0;align-items:start;position:relative}
+.cw-app .cw-video-manager .cw-upload-copy>label>span{padding-top:10px;color:#858585;font-size:14px!important;font-weight:400}
+.cw-app .cw-video-manager .cw-upload-copy>label>small{grid-column:2;text-align:right;margin-top:-28px;padding-right:12px;z-index:1;pointer-events:none;color:#999}
+.cw-app .cw-video-manager :is(.cw-upload-copy input,.cw-upload-copy textarea,.cu-context-fields select){background:#f5f5f5;border:1px solid transparent;border-radius:8px;padding:10px 12px;color:#222;font-size:15px!important;box-shadow:none}
+.cw-app .cw-video-manager .cw-upload-copy textarea{min-height:128px;padding-bottom:30px;resize:vertical}
+.cw-app .cw-video-manager :is(input,textarea,select):focus-visible{outline:2px solid #ff8143;outline-offset:2px}
+.cw-app .cw-video-manager .cw-upload-cover-column{display:grid;grid-template-columns:136px 120px minmax(0,1fr);gap:0;align-items:center;margin-top:24px}
+.cw-app .cw-video-manager .cw-cover-field-label{align-self:start;padding-top:10px;color:#858585;font-size:14px}
+.cw-app .cw-video-manager .cw-upload-cover-column .cw-video-cover{position:relative;display:flex;width:120px;height:170px;min-height:170px;border:1px dashed #d8d8d8;border-radius:8px;padding:12px;background:#f5f5f5;overflow:hidden;color:#999;gap:8px;cursor:pointer}
+.cw-app .cw-video-manager .cw-video-cover img{object-fit:cover}
+.cw-app .cw-video-manager .cw-video-cover input{position:absolute;inset:0;width:100%;height:100%;opacity:0;cursor:pointer;z-index:2}
+.cw-app .cw-video-manager .cw-video-cover .cw-cover-replace{position:absolute;inset:auto 0 0;padding:6px;background:#0009;color:#fff;text-align:center;opacity:0;font-size:13px!important}
+.cw-app .cw-video-manager .cw-video-cover:is(:hover,:focus-within) .cw-cover-replace{opacity:1}
+.cw-app .cw-video-manager .cw-cover-guidance{padding-left:18px;max-width:340px}
+.cw-app .cw-video-manager .cw-cover-guidance p{font-size:13px!important;line-height:1.8;margin:0;color:#858585}
+.cw-app .cw-video-manager .cw-upload-step-actions{margin-top:32px;padding:20px 0 0;display:flex;justify-content:flex-end;gap:12px}
+.cw-app .cw-video-manager .cw-upload-step-actions button{min-width:96px;min-height:38px;font-size:14px!important;font-weight:400;border-radius:8px}
+@media(max-width:1000px){
+ .cw-app .cw-video-manager .cu-context-fields{grid-template-columns:minmax(0,1fr)}
+ .cw-app .cw-video-manager .cu-context-fields>label:nth-child(2){grid-template-columns:136px minmax(0,1fr)}
+}
+@media(max-width:760px){
+ .cw-app .cw-video-manager .cw-video-form{padding:20px 16px}
+ .cw-app .cw-video-manager .cw-upload-title{margin-bottom:24px}
+ .cw-app .cw-video-manager .cw-upload-steps{flex-wrap:wrap;gap:12px;margin-bottom:24px}
+ .cw-app .cw-video-manager .cw-upload-steps li{font-size:13px!important}
+ .cw-app .cw-video-manager :is(.cw-upload-copy>label,.cu-context-fields>label),.cw-app .cw-video-manager .cu-context-fields>label:nth-child(2){grid-template-columns:1fr;gap:8px}
+ .cw-app .cw-video-manager .cw-upload-copy>label>small{grid-column:1}
+ .cw-app .cw-video-manager .cu-context-footer{padding-left:0}
+ .cw-app .cw-video-manager .cw-upload-cover-column{grid-template-columns:120px minmax(0,1fr);row-gap:12px}
+ .cw-app .cw-video-manager .cw-cover-field-label{grid-column:1/-1;padding:0}
+ .cw-app .cw-video-manager .cw-cover-guidance{padding-left:12px}
+ .cw-app .cw-video-manager :is(.cw-upload-copy input,.cw-upload-copy textarea,.cu-context-fields select){font-size:16px!important}
+}

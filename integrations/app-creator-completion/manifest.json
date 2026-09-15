@@ -1,0 +1,45 @@
+{
+  "sourceRevision": "f3d5bde6b562d2132ac640432ce157b4896f525c",
+  "files": [
+    {
+      "path": "application/admin/controller/creator/Audit.php",
+      "originalSha256": null,
+      "patchedSha256": "e9a645fbae8abe001f150701fd3f3617f9973ce7915495f727f811635bbc6d2e"
+    },
+    {
+      "path": "application/admin/controller/recharge/Withdrawal.php",
+      "originalSha256": "aa77276e488d6b11693e945ec6fa1f5e6957dd222cad7376a60f7ee781e89447",
+      "patchedSha256": "1fe79680aa07033141adb3650eab845fee65b93b10c1a5ae38820e8fb39d2325"
+    },
+    {
+      "path": "application/admin/view/recharge/withdrawal/edit.html",
+      "originalSha256": "eea8f49bcbaf324bc87a90dea3c20754034dc301106824a358b1ddb9f4b7bdf5",
+      "patchedSha256": "b1f5a48293ea9e086784b2480201af7066e5a2405ac6568bf017c981a0f63816"
+    },
+    {
+      "path": "application/api/controller/User.php",
+      "originalSha256": "9402c6c13e39a61a3bc54706f3b9a743ff077ab6231af8f22384a368a7ff0ece",
+      "patchedSha256": "d7596fb4cb99b2a48af74e7df2631b597abaa838afedacaff8421b2a58d71653"
+    },
+    {
+      "path": "application/common/controller/Api.php",
+      "originalSha256": "4042c8bce906030157a89a7ba8a1147fddab5901caec2880713bc62b47342e10",
+      "patchedSha256": "b96aef5678e21773d7a27e30cb4d57deaee6b422ee7fd7902e97a3c38032734e"
+    },
+    {
+      "path": "application/common/controller/Backend.php",
+      "originalSha256": "dc48b9d0801964713945db4584ed4adfe2ac6addf4d3bff27cd898aaca46e3d6",
+      "patchedSha256": "a6f27d6eb69d8eba1bf912641b4e28118a5e1b021634c6d060f9d9104e8ced2a"
+    },
+    {
+      "path": "application/common/service/CreatorWithdrawalDecision.php",
+      "originalSha256": null,
+      "patchedSha256": "4a4e74d7f3d899c1786f63028ddf7fa686faa56d1d6c074221de09858fe6c0b1"
+    },
+    {
+      "path": "application/common/service/LogService.php",
+      "originalSha256": "0c5758c00458b837063517537423c76f37c7372643183b147dad091e2211e6ba",
+      "patchedSha256": "48f57cc005df917ec579fb851616fa9294b9feae54b57d1906ed5f6de23941d4"
+    }
+  ]
+}

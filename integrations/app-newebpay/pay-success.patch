@@ -1,0 +1,8 @@
+--- a/application/common/controller/Api.php
++++ b/application/common/controller/Api.php
+@@ -378,2 +378,5 @@
+                 switch ($type) {
++                    case 'newebpay':
++                        $enum = 'money_recharge_newebpay';
++                        break;
+                     case 'apple':

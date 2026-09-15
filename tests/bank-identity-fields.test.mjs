@@ -1,0 +1,20 @@
+import test from 'node:test';
+import assert from 'node:assert/strict';
+import {readFileSync} from 'node:fs';
+import {createRequire} from 'node:module';
+import ts from 'typescript';
+import React from 'react';
+import {renderToStaticMarkup} from 'react-dom/server';
+const require=createRequire(import.meta.url);
+const source=readFileSync(new URL('../src/components/creator-workspace/bank-identity-fields.tsx',import.meta.url),'utf8');
+const compiled=ts.transpileModule(source,{compilerOptions:{jsx:ts.JsxEmit.ReactJSX,module:ts.ModuleKind.CommonJS}}).outputText;
+const module={exports:{}};new Function('require','module','exports',compiled)(require,module,module.exports);
+test('password manager gets explicit read-only creator username rather than bank confirmation',()=>{
+  const html=renderToStaticMarkup(React.createElement(module.exports.BankIdentityFields,{username:'writer_test'}));
+  const inputs=html.match(/<input[^>]+>/g);
+  assert.equal(inputs.length,2);
+  assert.match(inputs[0],/name="username"/);assert.match(inputs[0],/autoComplete="username"/);
+  assert.match(inputs[0],/readOnly=""/);assert.match(inputs[0],/value="writer_test"/);
+  assert.match(inputs[1],/name="password"/);assert.match(inputs[1],/autoComplete="current-password"/);
+  assert.match(html,/請勿輸入銀行卡密碼或提款密碼/);
+});

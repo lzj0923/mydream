@@ -1,0 +1,46 @@
+services:
+  mysql:
+    image: mysql:8.4
+    environment:
+      MYSQL_DATABASE: mydream_cms
+      MYSQL_USER: mydream
+      MYSQL_PASSWORD: ${CMS_DATABASE_PASSWORD:-mydream}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD:-change-this-root-password}
+    ports:
+      - "3308:3306"
+    volumes:
+      - mydream_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-p${MYSQL_ROOT_PASSWORD:-change-this-root-password}"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  cms:
+    build:
+      context: ./backend
+    environment:
+      CMS_DATABASE_URL: jdbc:mysql://mysql:3306/mydream_cms?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+      CMS_DATABASE_USERNAME: mydream
+      CMS_DATABASE_PASSWORD: ${CMS_DATABASE_PASSWORD:-mydream}
+      CMS_BOOTSTRAP_ADMIN_EMAIL: ${CMS_BOOTSTRAP_ADMIN_EMAIL:-}
+      CMS_BOOTSTRAP_ADMIN_PASSWORD: ${CMS_BOOTSTRAP_ADMIN_PASSWORD:-}
+      CMS_PII_KEY_BASE64: ${CMS_PII_KEY_BASE64:-}
+      CMS_ALLOWED_ORIGINS: http://localhost:3000
+      CMS_PUBLIC_BASE_URL: http://localhost:8080
+      CMS_APP_CONTENT_ENABLED: ${CMS_APP_CONTENT_ENABLED:-false}
+      CMS_APP_DATABASE_URL: ${CMS_APP_DATABASE_URL:-}
+      CMS_APP_DATABASE_USERNAME: ${CMS_APP_DATABASE_USERNAME:-}
+      CMS_APP_DATABASE_PASSWORD: ${CMS_APP_DATABASE_PASSWORD:-}
+      CMS_APP_PUBLIC_BASE_URL: ${CMS_APP_PUBLIC_BASE_URL:-}
+    ports:
+      - "8080:8080"
+    volumes:
+      - mydream_media:/app/data/uploads
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+volumes:
+  mydream_mysql:
+  mydream_media:

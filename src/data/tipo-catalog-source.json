@@ -1,0 +1,12 @@
+{
+  "fetchedAt": "2026-09-07",
+  "source": "https://tiponet.tipo.gov.tw/S040DV1/api/products",
+  "sourcePage": "https://tiponet.tipo.gov.tw/S040WV1/",
+  "sha256": "0031e34143fc0e36a8de1fdf3972a608e22eb6e5644f63e674f82c4fd64ebaa2",
+  "counts": {
+    "classes": 45,
+    "groups": 638,
+    "subgroups": 897,
+    "items": 20623
+  }
+}

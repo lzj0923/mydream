@@ -1,0 +1,8 @@
+"use client";
+import {useState} from "react";
+import {useCompanyPermissions} from "./company-team";
+export function ProjectContentEditor({project,onSaved}:{project:{id:string;title:string;genre?:string;synopsis?:string;version:number};onSaved:()=>void}){
+ const permissions=useCompanyPermissions(),[open,setOpen]=useState(false),[error,setError]=useState(""),[busy,setBusy]=useState(false);
+ if(!permissions.canEdit)return null;
+ return <div>{!open?<button className="cw-outline" onClick={()=>setOpen(true)}>編輯作品資料</button>:<form className="ct-draft" onSubmit={async e=>{e.preventDefault();if(busy)return;const f=new FormData(e.currentTarget);setBusy(true);setError("");try{const r=await fetch(`/api/creator/projects/${project.id}/content`,{method:"PUT",headers:{"Content-Type":"application/json"},body:JSON.stringify({title:f.get("title"),genre:f.get("genre"),synopsis:f.get("synopsis"),version:project.version})});const d=await r.json();if(!r.ok)throw Error(d.detail||"保存失敗");setOpen(false);onSaved();}catch(e){setError((e as Error).message);}finally{setBusy(false);}}}><fieldset disabled={busy}><label>作品名稱<input name="title" required maxLength={120} defaultValue={project.title}/></label><label>題材<input name="genre" required maxLength={40} defaultValue={project.genre}/></label><label>作品簡介<textarea name="synopsis" required maxLength={5000} rows={4} defaultValue={project.synopsis}/></label><p>保存後更新企業項目資料，已發佈內容由平台同步。</p>{error&&<p role="alert">{error}</p>}<button type="button" onClick={()=>setOpen(false)}>取消</button><button className="cw-primary">{busy?"保存中…":"保存資料"}</button></fieldset></form>}</div>;
+}

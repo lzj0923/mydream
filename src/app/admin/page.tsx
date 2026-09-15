@@ -1,0 +1,4 @@
+import Link from "next/link";
+import { Globe2, Smartphone, ArrowRight } from "lucide-react";
+export const metadata={title:"管理系統入口｜MY DREAM"};
+export default function AdminPage(){return <main className="admin-system-picker"><Link href="/" className="admin-system-brand">MY DREAM</Link><p>管理工作入口</p><h1>選擇要管理的系統</h1><div className="admin-system-cards"><Link href="/admin/site" className="admin-system-site"><Globe2 size={34}/><small>WEBSITE MANAGEMENT</small><h2>官網內容管理</h2><p>官網頁面、媒體素材、內容與配置。</p><strong>使用官網管理員郵箱登錄 <ArrowRight size={18}/></strong></Link><Link href="/admin/app" className="admin-system-app"><Smartphone size={34}/><small>APP OPERATIONS</small><h2>App 業務管理</h2><p>創作者認證、項目交付審核、App 用戶與短劇上架。</p><strong>使用 App 管理員賬號登錄 <ArrowRight size={18}/></strong></Link></div><p>兩套賬號、會話與業務權限獨立，任一後台均可單獨登錄使用。</p></main>;}
