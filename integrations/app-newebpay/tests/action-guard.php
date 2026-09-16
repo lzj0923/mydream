@@ -23,7 +23,7 @@ namespace app\common\controller {
 namespace {
     function response($body, $code) { return ['status' => $code]; }
     require __DIR__.'/../application/api/controller/Newebpay.php';
-    foreach (['checkout', 'orders', 'notify'] as $action) {
+    foreach (['checkout', 'orders', 'notify', 'testchannel'] as $action) {
         $controller = new \app\api\controller\Newebpay($action);
         if (!$controller->initialized) throw new \Exception('Authentication initialization bypassed');
     }
@@ -34,5 +34,5 @@ namespace {
         }
         throw new \Exception('Business helper exposed as HTTP action');
     }
-    echo "PASS: only checkout/orders/notify exposed, App authentication initialization retained\n";
+    echo "PASS: only payment actions and private catalog exposed, App authentication initialization retained\n";
 }

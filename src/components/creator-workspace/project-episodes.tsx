@@ -1,4 +1,7 @@
 "use client";
+import {csvCell} from "@/lib/creator-analytics";
+import {FilmEmpty} from "./workspace-panels";
+import {useWorkType} from "./work-type";
 import {ResumeEpisode} from "./resume-episode";
 import {ContentRemoval} from "./content-removal";
 import {useCompanyPermissions} from "./company-team";
@@ -128,8 +131,12 @@ function Submission({ item, admin, latest, producing, publication, settings, bas
   </div></details>;
 }
 
-export function ProjectVideoList({ active, revision }: { active: boolean; revision: number }) {
-  const [rows, setRows] = useState<EpisodeSubmission[]>([]), [error, setError] = useState("");
-  useEffect(() => { if (!active) return; let alive = true; projectApi<EpisodeSubmission[]>("project-episodes").then(value => { if (alive) { setRows(value); setError(""); } }).catch(e => { if (alive) setError(e.message); }); return () => { alive = false; }; }, [active, revision]);
-  return <section className="cw-card cp-center"><h2>項目視頻 · 交付記錄</h2><p>按項目及集數查看交付稿，包含待提交、待驗收、待修改及已驗收版本。</p>{error ? <p className="cp-error" role="alert">{error}</p> : !rows.length ? <p>暫無項目視頻交付記錄。</p> : <div className="cp-submission-list">{rows.map(item => <a key={item.id} href={`#projects?project=${encodeURIComponent(item.projectId)}`}><strong>{item.projectTitle} · 第 {item.episodeNumber} 集 · V{item.revision}</strong><span>{episodeLabels[item.state]}</span></a>)}</div>}</section>;
+export function ProjectVideoList({ active, revision, onUpload }: { active: boolean; revision: number; onUpload?:()=>void }) {
+  const permissions=useCompanyPermissions(),{workType}=useWorkType();
+  const [rows,setRows]=useState<EpisodeSubmission[]>([]),[error,setError]=useState(""),[loading,setLoading]=useState(true);
+  const [search,setSearch]=useState(""),[status,setStatus]=useState("ALL"),[reload,setReload]=useState(0);
+  useEffect(()=>{if(!active)return;let alive=true;setLoading(true);projectApi<EpisodeSubmission[]>("project-episodes").then(value=>{if(alive){setRows(value);setError("");}}).catch(e=>{if(alive)setError(e.message);}).finally(()=>{if(alive)setLoading(false);});return()=>{alive=false;};},[active,revision,reload]);
+  const visible=rows.filter(r=>(status==="ALL"||r.state===status)&&`${r.projectTitle} ${r.title} ${r.id}`.toLowerCase().includes(search.trim().toLowerCase()));
+  function exportRows(){const values=[["項目","視頻","集數","版本","驗收狀態","更新時間"],...visible.map(r=>[r.projectTitle||"",r.title,r.episodeNumber,r.revision,episodeLabels[r.state],r.updatedAt])];const url=URL.createObjectURL(new Blob(["\ufeff"+values.map(r=>r.map(csvCell).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"}));const a=document.createElement("a");a.href=url;a.download="項目視頻交付記錄.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
+  return <section className="cw-card rp-panel rp-videos"><header className="rp-heading"><h1>{workType==="COMIC"?"漫劇":"短劇"} · 視頻管理</h1><button className="rp-text" disabled={loading} onClick={()=>setReload(v=>v+1)}>刷新記錄</button></header><div className="rp-toolbar"><label className="rp-search"><input aria-label="搜索項目視頻" value={search} onChange={e=>setSearch(e.target.value)} placeholder="輸入項目、視頻名稱或編號"/></label><select aria-label="驗收狀態" value={status} onChange={e=>setStatus(e.target.value)}><option value="ALL">全部驗收狀態</option>{Object.entries(episodeLabels).map(([key,label])=><option key={key} value={key}>{label}</option>)}</select><div className="rp-toolbar-actions"><a className="cw-outline" href="#help">使用指南</a><button className="cw-outline" disabled={!visible.length||loading||!!error} onClick={exportRows}>導出記錄</button>{permissions.canUpload&&onUpload&&<button className="cw-primary" onClick={onUpload}>上傳視頻</button>}</div></div><div className="rp-table-wrap"><table className="rp-table"><thead><tr>{["劇集信息","所屬項目","集數 / 版本","驗收狀態","更新時間","操作"].map(t=><th key={t}>{t}</th>)}</tr></thead><tbody>{!error&&visible.map(r=><tr key={r.id}><td><div className="rp-work"><span className="rp-cover">{r.coverUrl?<img src={r.coverUrl} alt=""/>:<Film size={21}/>}</span><div><strong>{r.title||`第 ${r.episodeNumber} 集`}</strong><small>ID：{r.id}</small></div></div></td><td>{r.projectTitle||"—"}</td><td>第 {r.episodeNumber} 集 · V{r.revision}</td><td><span className={`rp-status ${r.state==="APPROVED"?"is-success":""}`}>{episodeLabels[r.state]}</span></td><td>{r.updatedAt?new Date(r.updatedAt).toLocaleString("zh-TW"):"—"}</td><td><a className="rp-link" href={`#projects?project=${encodeURIComponent(r.projectId)}`}>查看項目</a></td></tr>)}</tbody></table></div>{loading?<FilmEmpty title="正在讀取視頻記錄…"/>:error?<FilmEmpty title={error}><button onClick={()=>setReload(v=>v+1)}>重新讀取</button></FilmEmpty>:!visible.length?<FilmEmpty title={rows.length?"沒有符合條件的視頻":"暫無視頻交付記錄"}/>:<p className="rp-footnote">共 {visible.length} 條交付記錄 · 驗收狀態不代表 App 當前上架狀態，上架情況請在項目中查看。</p>}</section>;
 }

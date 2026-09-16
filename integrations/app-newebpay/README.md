@@ -48,6 +48,10 @@
 
 ## 实际业务行为
 
+- 专属测试链接为 `/tasks/test/<随机口令>`。服务器仅保存口令 SHA256；有效口令下八个原套餐每次均收 NT$1，金币数量/会员天数按原套餐发放给下单时登录的用户。无需指定 App 用户 ID，未登录必须先登录；公开价目不变。付款属于正式实付，不是蓝新沙箱。
+- 测试订单 `product_id` 带 `test-` 前缀，金额快照为 1。清空服务器 `[newebpay]` 下的 `test_channel_hash` 可关闭新测试订单；不会影响已创建订单的正常支付通知到账。
+- 链接不加入导航或站点地图，页面声明 noindex/nofollow、no-referrer。持有链接且登录的用户均能使用，链接不应公开传播。
+
 - 官网只提交 productId 和页面价格，价格仅用于检测页面过期；实际扣款金额、金币和会员天数由 App 端商品目录确定。
 - 现有价目保持不变：500/700/1500/2500 金币分别 NT$100/280/480/850；7/30/90/365 天会员分别 NT$240/590/1390/4390。
 - App 用当前登录用户创建订单，不接受浏览器指定 user_id、金币数量或会员天数。
@@ -70,6 +74,7 @@
 node --experimental-strip-types --loader ./tests/alias-loader.mjs --test tests/payments.test.ts tests/app-auth.test.ts
 php integrations/app-newebpay/tests/protocol.php
 php integrations/app-newebpay/tests/action-guard.php
+php integrations/app-newebpay/tests/checkout-channel.php
 php integrations/app-newebpay/tests/settlement.php
 ```
 

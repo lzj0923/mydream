@@ -1,9 +1,10 @@
 "use client";
 
 import { useCallback, useEffect, useState, type ReactNode } from "react";
-import { FileCheck2, Download, RefreshCw } from "lucide-react";
+import { FileCheck2, Download, RefreshCw, Search } from "lucide-react";
 import { agreementDocument, agreementLabels, latestAgreement, type Agreement, type AgreementData, type AgreementTemplate } from "@/lib/creator-agreements";
 import "./contract-center.css";
+import {WorkTypeTabs} from "./work-type";
 import { FilmEmpty } from "./workspace-panels";
 
 async function request<T>(path: string, method = "GET", body?: unknown): Promise<T> {
@@ -59,8 +60,15 @@ export function ContractCenter({ admin = false, onboarding = false, onReady }: {
   const project = data?.projects.find(p => p.id === scope);
   const canApply = !admin && (!current || current.state === "CHANGES_REQUESTED") && (scope === "membership" || (data?.ready && project && ["PENDING_CONTRACT","SIGNED","PRODUCING"].includes(project.stage)));
   if (!admin && !onboarding && !documentOpen) {
-    const rows = (data?.contracts ?? []).filter(item => (filter === "ALL" || item.state === filter) && `${item.id} ${item.signerName} ${item.contextText}`.includes(contractSearch));
-    return <section className="cw-card cw-full-panel"><div className="cw-card-title"><h1 className="cw-page-title">合作合同</h1><button className="cw-text-button" onClick={() => void load()}><RefreshCw size={14}/>刷新狀態</button></div><div className="cw-list-toolbar"><div className="cw-tabs">{[["ALL","全部"],...Object.entries(agreementLabels)].map(([key,label]) => <button key={key} className={filter === key ? "is-active" : ""} onClick={() => setFilter(key)}>{label} · {(data?.contracts ?? []).filter(item => key === "ALL" || item.state === key).length}</button>)}</div><label className="cw-search"><input aria-label="搜索合同" placeholder="請輸入合同名稱或編號" value={contractSearch} onChange={e => setContractSearch(e.target.value)}/></label></div><div className="cw-table-scroll"><table className="cw-table"><thead><tr>{["合同名稱","合同編號","項目信息","合同狀態","操作"].map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{rows.map(item => <tr key={item.id}><td>{item.kind === "MEMBERSHIP" ? "創作者入駐合作協議" : "項目合作確認書"}</td><td>{item.id}</td><td>{item.contextText.split("\n")[0] || "—"}</td><td>{agreementLabels[item.state]}</td><td><button className="cw-contract-link" onClick={() => { setScope(item.kind === "MEMBERSHIP" ? "membership" : item.scope); setDocumentOpen(true); }}>查看合同</button></td></tr>)}</tbody></table></div>{loading ? <FilmEmpty title="正在讀取合同資料…"/> : error ? <FilmEmpty title={error}><button className="cw-outline" onClick={() => void load()}>重新加載</button></FilmEmpty> : !rows.length ? <FilmEmpty title="暫無符合條件的合同"><button className="cw-primary" onClick={() => setDocumentOpen(true)}>查看合作協議</button></FilmEmpty> : <button className="cw-outline" onClick={() => { setScope("membership"); setDocumentOpen(true); }}>查看入駐協議</button>}</section>;
+    const rows = (data?.contracts ?? []).filter(item => (filter === "ALL" || item.state === filter) && `${item.title} ${item.id} ${item.signerName} ${item.contextText}`.toLowerCase().includes(contractSearch.trim().toLowerCase()));
+    return <section className="cw-card cw-full-panel rp-panel rp-contracts">
+      <div className="rp-contract-heading"><WorkTypeTabs contract/><div className="rp-contract-tools"><button onClick={() => { setScope("membership"); setDocumentOpen(true); }}>合作協議</button><button aria-label="刷新合同" disabled={loading} onClick={() => void load()}><RefreshCw size={14}/></button><details><summary>文件說明</summary><p>項目文件按當前創作身份展示，入駐協議為賬號共用。現有文件為流程演示，不代表正式簽約。</p></details></div></div>
+      <div className="cw-list-toolbar"><div className="cw-tabs">{[["ALL","全部"],...Object.entries(agreementLabels)].map(([key,label]) => <button key={key} className={filter === key ? "is-active" : ""} onClick={() => setFilter(key)}>{label}·{(data?.contracts ?? []).filter(item => key === "ALL" || item.state === key).length}</button>)}</div><label className="cw-search"><input aria-label="搜索合同" placeholder="請輸入合同名稱/合同編號" value={contractSearch} onChange={e => setContractSearch(e.target.value)}/><Search size={16}/></label></div>
+      <div className="cw-table-scroll"><table className="cw-table"><colgroup>{[20,13,9,15,8,8,8,7,12].map((width,i)=><col key={i} style={{width:`${width}%`}}/>)}</colgroup><thead><tr>{["合同名稱","合同編號","確認時間","所屬項目","合同狀態","文件類型","確認人","關聯文件","操作"].map(label => <th key={label}>{label}</th>)}</tr></thead><tbody>{rows.map(item => <tr key={item.id}>
+        <td><span className="rp-contract-name" title={item.title}>{item.title || (item.kind === "MEMBERSHIP" ? "創作者入駐合作協議" : "項目合作確認書")}</span></td><td className="rp-contract-id" title={item.id}>{item.id}</td><td>{item.reviewedAt ? new Date(item.reviewedAt).toLocaleDateString("sv-SE") : "—"}</td><td>{item.kind === "MEMBERSHIP" ? "賬號共用" : item.contextText.split("\n")[0] || "—"}</td><td><span className={`rp-status ${item.state==="DEMO_ACTIVE"?"is-success":""}`}>{agreementLabels[item.state]}</span></td><td>{item.kind === "MEMBERSHIP"?"入駐協議":"項目合作"}</td><td>{item.signerName||"—"}</td><td>—</td><td><button className="cw-contract-link" onClick={() => { setScope(item.kind === "MEMBERSHIP" ? "membership" : item.scope); setDocumentOpen(true); }}>查看合同</button><button className="cw-contract-link" onClick={()=>download(item)}>下載文件</button></td>
+      </tr>)}</tbody></table></div>
+      {loading ? <FilmEmpty title="正在讀取合同資料…"/> : error ? <FilmEmpty title={error}><button className="cw-outline" onClick={() => void load()}>重新加載</button></FilmEmpty> : !rows.length ? <FilmEmpty title={contractSearch?"未搜索到合同":"暫無合同數據"}/> : null}
+    </section>;
   }
   return <section className="cw-card agreement-center">
     {!admin && !onboarding && <button className="cw-text-button" onClick={() => setDocumentOpen(false)}>返回合同列表</button>}

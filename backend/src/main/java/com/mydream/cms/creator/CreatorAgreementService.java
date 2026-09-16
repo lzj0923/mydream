@@ -32,7 +32,7 @@ public class CreatorAgreementService {
         if(!ready(viewer.ownerKey(),"membership"))throw ApiException.conflict("請先在合同管理完成創作者合作協議確認，並等待平台審核");
     }
     public void requireProject(CreatorAccess.Viewer viewer,String id){
-        var rows=jdbc.queryForList("SELECT owner_key,status FROM cms_creator_script WHERE id=? AND status IN ('APPROVED','ACTIVE')",id);
+        var rows=jdbc.queryForList("SELECT owner_key,status FROM cms_creator_script WHERE id=? AND status IN ('APPROVED','ACTIVE')"+viewer.typeFilter(""),id);
         if(rows.isEmpty()||(!viewer.admin()&&!rows.get(0).get("owner_key").equals(viewer.ownerKey())))throw ApiException.notFound("項目不存在");
         if("ACTIVE".equals(rows.get(0).get("status")))return; // Direct projects do not require a cooperation contract to create episodes.
         String owner=rows.get(0).get("owner_key").toString();

@@ -5,6 +5,7 @@ import "./reference-design.css";
 import "./workspace-type-floor.css";
 import "./workspace-polish.css";
 import "./workspace-video-reference.css";
+import "./reference-panels.css";
 
 export const metadata: Metadata = {
   title: "創作者中心｜MY DREAM",

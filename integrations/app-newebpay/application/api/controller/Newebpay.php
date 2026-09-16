@@ -7,13 +7,13 @@ use think\Db;
 
 class Newebpay extends Api
 {
-    protected $noNeedLogin = ['notify'];
+    protected $noNeedLogin = ['notify', 'testchannel'];
     protected $noNeedRight = '*';
 
     protected function _initialize()
     {
         // The shared base exposes public business helpers; never allow them as HTTP actions.
-        if (!in_array(strtolower($this->request->action()), ['checkout', 'orders', 'notify'], true)) {
+        if (!in_array(strtolower($this->request->action()), ['checkout', 'orders', 'notify', 'testchannel'], true)) {
             throw new \think\exception\HttpResponseException(response('Not found', 404));
         }
         parent::_initialize();
@@ -29,6 +29,13 @@ class Newebpay extends Api
         $products = Protocol::products();
         if (!isset($products[$productId])) $this->error('方案不存在');
         $p = $products[$productId];
+        $testKey = $this->request->post('testKey/s', '');
+        if ($testKey !== '') {
+            if (!Protocol::testChannelAllowed($testKey, $c)) $this->error('測試通道不存在或已關閉');
+            $p['price'] = 1;
+            $p['title'] = '測試 '.$p['title'];
+            $productId = 'test-'.$productId;
+        }
         // Browser price is only a stale-price guard; the charged price always comes from this catalog.
         if ((string)$this->request->post('expectedPrice/s', '') !== (string)$p['price']) $this->error('方案價格已更新，請重新整理頁面');
         $order = ['order_no'=>'MD'.bin2hex(random_bytes(14)), 'user_id'=>$this->auth->id,
@@ -47,6 +54,18 @@ class Newebpay extends Api
         $rows = Db::name('newebpay_order')->where('user_id', $this->auth->id)
             ->field('order_no,product_id,title,current_price,status,environment,created_at,paid_at')->order('id desc')->limit(20)->select();
         $this->success('', ['orders'=>$rows]);
+    }
+
+    public function testchannel()
+    {
+        if (!$this->request->isPost()) $this->error('請使用 POST');
+        if (!Protocol::testChannelAllowed($this->request->post('testKey/s', ''), config('newebpay'))) {
+            $this->error('測試通道不存在或已關閉');
+        }
+        $products = Protocol::products();
+        foreach ($products as &$product) $product['price'] = 1;
+        unset($product);
+        $this->success('', ['products'=>$products]);
     }
 
     public function notify()

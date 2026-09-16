@@ -35,6 +35,14 @@ class NewebpayProtocol
         if (!empty(parse_url($c['site_url'], PHP_URL_QUERY))) throw new \RuntimeException('Invalid site URL');
     }
 
+    public static function testChannelAllowed($key, array $c)
+    {
+        $expected = $c['test_channel_hash'] ?? '';
+        return is_string($key) && preg_match('/^[a-f0-9]{64}$/D', $key)
+            && is_string($expected) && preg_match('/^[a-f0-9]{64}$/D', $expected)
+            && hash_equals($expected, hash('sha256', $key));
+    }
+
     public static function sha($encrypted, array $c)
     {
         return strtoupper(hash('sha256', 'HashKey='.$c['hash_key'].'&'.$encrypted.'&HashIV='.$c['hash_iv']));

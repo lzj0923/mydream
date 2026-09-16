@@ -3,7 +3,7 @@
 import { useRef, useState } from "react";
 import { parseCheckout } from "@/lib/payments/checkout";
 
-export function PurchaseButton({ productId, price, title }: { productId: string; price: number; title: string }) {
+export function PurchaseButton({ productId, price, title, testKey }: { productId: string; price: number; title: string; testKey?: string }) {
   const [confirming, setConfirming] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState("");
@@ -13,8 +13,8 @@ export function PurchaseButton({ productId, price, title }: { productId: string;
     if (inFlight.current) return;
     inFlight.current = true; setBusy(true); setMessage("");
     try {
-      const response = await fetch("/api/payments/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId, expectedPrice: price }) });
-      if (response.status === 401) { window.location.assign("/login?next=%2Ftasks"); return; }
+      const response = await fetch("/api/payments/checkout", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ productId, expectedPrice: price, ...(testKey ? { testKey } : {}) }) });
+      if (response.status === 401) { window.location.assign(`/login?next=${encodeURIComponent(testKey ? `/tasks/test/${testKey}` : '/tasks')}`); return; }
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || "暫時無法建立付款");
       const checkout = parseCheckout(data);

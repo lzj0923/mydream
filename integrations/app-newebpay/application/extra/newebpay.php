@@ -12,4 +12,5 @@ return [
     'hash_iv' => $value('hash_iv'),
     'site_url' => $value('site_url'),
     'notify_url' => $value('notify_url'),
+    'test_channel_hash' => $value('test_channel_hash'),
 ];

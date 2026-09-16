@@ -1,0 +1,36 @@
+"use client";
+import {useEffect,useState,type ReactNode} from "react";
+import {Building2,Copy,ChevronRight,Film} from "lucide-react";
+import type {Team} from "./company-team";
+import type {Verification} from "@/lib/creator-auth/verification";
+import {verificationLabels} from "@/lib/creator-auth/verification";
+import {roleLabel,hasPermission} from "@/lib/creator-team/roles";
+import type {Project} from "./production-center";
+import type {EarningsSummary} from "@/lib/creator-settlement/summary";
+import {useWorkType} from "./work-type";
+import "./enterprise-workspace.css";
+
+type Article={title:string;category:string;text:string};
+export function EnterpriseDashboard({team,articles,navigate,openArticle}:{team:Team;articles:Article[];navigate:(section:"projects"|"data"|"help"|"settlement")=>void;openArticle:(article:Article)=>void}){
+ const {workType}=useWorkType();
+ const [projects,setProjects]=useState<Project[]|null>(null),[error,setError]=useState("");
+ const [earnings,setEarnings]=useState<EarningsSummary|null>(null),[incomeError,setIncomeError]=useState("");
+ const [days,setDays]=useState(7);
+ useEffect(()=>{const c=new AbortController();fetch("/api/creator/projects",{cache:"no-store",signal:c.signal}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.detail||"項目數據讀取失敗");return d;}).then(setProjects).catch(e=>{if(!c.signal.aborted)setError(e.message);});return()=>c.abort();},[]);
+ useEffect(()=>{if(team.member)return;const c=new AbortController();fetch("/api/creator-settlement/summary",{cache:"no-store",signal:c.signal}).then(async r=>{const d=await r.json();if(!r.ok)throw Error(d.message||"收益暫時無法讀取");return d;}).then(setEarnings).catch(e=>{if(!c.signal.aborted)setIncomeError(e.message);});return()=>c.abort();},[team.member]);
+ const points=Array.from({length:days},(_,i)=>{const date=new Date();date.setDate(date.getDate()-days+1+i);const key=`${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,"0")}-${String(date.getDate()).padStart(2,"0")}`;return{key,count:projects?.filter(p=>p.createdAt.slice(0,10)===key).length??0};});
+ const ceiling=Math.max(4,...points.map(p=>p.count));
+ const metrics=[["新增項目（部）",points.reduce((n,p)=>n+p.count,0)],["累計項目（部）",projects?.length],["創作中項目（部）",projects?.filter(p=>p.stage!=="COMPLETED").length],["承諾總集數（集）",projects?.reduce((n,p)=>n+p.episodeCount,0)]];
+ return <div className="ew-dashboard"><main className="ew-main">
+ {!team.member&&<section className="cw-card ew-card"><header><h2>收益概覽</h2><button onClick={()=>navigate("settlement")}>查看全部<ChevronRight size={14}/></button></header><div className="ew-income">{[[earnings?.incomeComplete?"累計分潤（積分）":"已讀取分潤（積分）",earnings?.income],["待處理提現（元）",earnings?.pending],["已打款（元）",earnings?.paid]].map(([label,value])=><div key={label}><span>{label}</span><strong>{value??"—"}</strong></div>)}</div><p className="ew-caption">{incomeError||"統計當前綁定 App 賬號的收益，包含漫劇與短劇；暫不按創作身份拆分。"}{earnings&&!earnings.withdrawalsComplete&&" 提現統計僅涵蓋已讀取記錄。"}</p></section>}
+ <section className="cw-card ew-card"><header><h1>數據概覽 <span className="ew-tag">{workType==="SHORT_DRAMA"?"短劇":"漫劇"}</span></h1>{hasPermission(team,"traffic.view")&&<button onClick={()=>navigate("data")}>查看作品流量<ChevronRight size={14}/></button>}</header><div className="ew-period" aria-label="項目新增統計週期">{[7,14,30].map(n=><button key={n} aria-pressed={days===n} onClick={()=>setDays(n)}>近{n}天</button>)}</div>{error&&<p role="alert">{error}</p>}<div className="ew-metrics">{metrics.map(([label,n])=><div key={label}><span>{label}</span><strong>{projects?n:"—"}</strong></div>)}</div><p className="ew-caption">新增項目按所選日期統計，其餘為當前身份的累計數據。</p>{projects&&<><div className="ew-chart" aria-label={`近${days}天項目新增趨勢`}><div className="ew-axis">{[4,3,2,1,0].map(n=><span key={n}>{Math.round(ceiling*n/4)}</span>)}</div><div className="ew-bars">{points.map((p,i)=><div key={p.key}><i style={{height:`${p.count/ceiling*100}%`}} title={`${p.key}：新增 ${p.count} 部`}/>{(i===0||i===points.length-1||i%Math.ceil(days/7)===0)&&<small>{p.key.slice(5)}</small>}</div>)}</div></div><p className="ew-chart-label">項目新增量 · 部</p></>} </section>
+ <section className="cw-card ew-card"><header><h2>我的項目</h2><button onClick={()=>navigate("projects")}>查看全部<ChevronRight size={14}/></button></header>{projects?.length?projects.slice(0,4).map(p=><button key={p.id} className="ew-project" onClick={()=>navigate("projects")}><span>{p.title}</span><small>{p.episodeCount} 集</small><ChevronRight size={14}/></button>):<p className="ew-empty">{error?"項目暫時無法讀取":projects?"當前身份暫無項目":"正在讀取項目…"}</p>}</section>
+ </main><aside className="ew-aside"><section className="cw-card ew-card"><header><h2>公告</h2><button onClick={()=>navigate("help")}>查看全部<ChevronRight size={14}/></button></header><div className="ew-notice-banner"><small>MY DREAM · 創作者中心</small><strong>讓好故事<br/>走向更大的舞台</strong></div>{articles.map(a=><button className="ew-article" key={a.title} onClick={()=>openArticle(a)}><span>{a.title}</span><ChevronRight size={14}/></button>)}</section><section className="cw-card ew-card"><header><h2>創作活動</h2></header><div className="ew-activity"><Film size={48} strokeWidth={1}/><p>更多活動，敬請期待</p></div><p className="ew-health">合理安排創作時間，保持健康的工作節奏，讓每一份原創故事都得到尊重。</p></section></aside></div>;
+}
+
+export function EnterpriseIdentity({team,children}:{team:Team;children:ReactNode}){
+ const [verification,setVerification]=useState<Verification|null>(null),[error,setError]=useState("");
+ const [copied,setCopied]=useState(false),[editing,setEditing]=useState(false);
+ useEffect(()=>{if(team.member)return;const c=new AbortController();fetch("/api/creator/verification",{cache:"no-store",signal:c.signal}).then(async r=>{if(!r.ok)throw Error("認證資料暫時無法讀取");return r.json();}).then(setVerification).catch(e=>{if(!c.signal.aborted)setError(e.message);});return()=>c.abort();},[team.member]);
+ return <section className="cw-card ew-identity"><h1>創作者身份信息</h1><div className="ew-identity-body"><section><h2>當前身份信息</h2><dl><div><dt>企業賬號 ID</dt><dd>{team.ownerId}<button aria-label="複製企業賬號 ID" onClick={async()=>{try{await navigator.clipboard.writeText(team.ownerId);setCopied(true);}catch{setError("複製失敗，請手動選取賬號 ID");}}}><Copy size={14}/></button>{copied&&<small role="status">已複製</small>}</dd></div><div><dt>我的身份</dt><dd>企業賬號 · {team.member?roleLabel(team.role):"總管理員"}</dd></div><div><dt>我管理的企業</dt><dd>{team.name}</dd></div></dl></section><section><h2>管理權限</h2><p className="ew-identity-note">{team.member?"按總管理員分配的成員身份協作，具體權限可在成員管理中查看。":"管理企業項目、視頻、團隊與結算；可以邀請個人賬號加入並分配業務身份。"}</p><a href="#team" className="ew-orange">查看成員管理<ChevronRight size={14}/></a></section><section><header><h2>企業認證主體</h2>{!team.member&&<a className="ew-orange" href="/creator/verification">查看認證資料</a>}</header><div className="ew-entity"><span><Building2 size={25}/></span><div><strong>{team.name}</strong><b>企業</b><p>{team.member?"企業認證資料由總管理員管理":error|| (verification?verificationLabels[verification.state]:"正在讀取認證狀態…")}</p></div></div></section>{!team.member&&<section><header><h2>創作者名片</h2><button className="ew-orange" onClick={()=>setEditing(!editing)}>{editing?"收起":"編輯資料"}</button></header>{editing?children:<p className="ew-identity-note">管理創作者名稱、擅長題材與創作介紹。</p>}</section>}{error&&team.member&&<p role="alert">{error}</p>}</div></section>;
+}

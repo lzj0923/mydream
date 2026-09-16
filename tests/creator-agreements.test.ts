@@ -25,7 +25,7 @@ function render(initial: Record<string,unknown>, props: Record<string,unknown> =
   const exports: Record<string,ComponentType<Record<string,unknown>>>={};
   const panels = { exports: {} };
   runInNewContext(ts.transpileModule(readFileSync("src/components/creator-workspace/workspace-panels.tsx","utf8"),{compilerOptions:{module:ts.ModuleKind.CommonJS,jsx:ts.JsxEmit.ReactJSX}}).outputText,{exports:panels.exports,require:(name:string)=>name === "./creator-account" ? {CreatorAccountSettings:()=>null} : require(name)});
-  runInNewContext(compiled,{exports,initial,require:(name:string)=>name.endsWith(".css")?{}:name.endsWith("creator-agreements")?contracts:name === "./workspace-panels"?panels.exports:require(name)});
+  runInNewContext(compiled,{exports,initial,require:(name:string)=>name.endsWith(".css")?{}:name.endsWith("creator-agreements")?contracts:name === "./workspace-panels"?panels.exports:name === "./work-type"?{WorkTypeTabs:()=>require("react").createElement("div",null,"短劇合同","漫劇合同")}:require(name)});
   return renderToStaticMarkup(createElement(exports[component],props));
 }
 test("agreement administrator routes cannot accidentally use creator credentials",()=>{

@@ -13,6 +13,7 @@ import { Grid2X2, ArrowRight, ArrowUpRight, BarChart3, Bell, Check, ChevronDown,
 import { VerificationNotice } from "./creator-verification";
 import { WorkspaceRanking } from "./workspace-ranking";
 import { WorkspaceHelp } from "./workspace-help";
+import {EnterpriseDashboard,EnterpriseIdentity} from "./enterprise-workspace";
 import { WorkspaceDashboard } from "./workspace-dashboard";
 import { FilmEmpty, SupplementaryPanel } from "./workspace-panels";
 import { CreatorDataCenter } from "./data-center";
@@ -25,7 +26,7 @@ import { SettlementCenter } from "./settlement-center";
 import { type CatalogWork, type CreatorProfile, type WorkspaceData } from "./types";
 
 type Section = "team" | "ai-tools" | "messages" | "videos" | "home" | "scripts" | "invites" | "withdrawals" | "details" | "account" | "signature" | "projects" | "data" | "settlement" | "contracts" | "profile" | "help" | "ranking";
-const titles: Record<Section, string> = { team:"公司與團隊", "ai-tools": "AI 工具市場", messages: "消息中心", videos: "視頻管理", home: "工作台", scripts: "我的項目", invites: "邀約管理", withdrawals: "提現記錄", details: "作品明細", account: "賬號信息", signature: "我的署名短劇", projects: "我的項目", data: "作品收入數據", settlement: "賬戶收益", contracts: "合同管理", profile: "創作者身份信息", help: "幫助中心", ranking: "短劇熱度榜" };
+const titles: Record<Section, string> = { team:"成員管理", "ai-tools": "AI 工具市場", messages: "消息中心", videos: "視頻管理", home: "工作台", scripts: "我的項目", invites: "邀約管理", withdrawals: "提現記錄", details: "作品明細", account: "賬號信息", signature: "我的署名短劇", projects: "我的項目", data: "作品收入數據", settlement: "賬戶收益", contracts: "合同管理", profile: "創作者身份信息", help: "幫助中心", ranking: "短劇熱度榜" };
 const helpArticles = [
   { title: "如何建立第一個項目？", category: "新手指南", text: "在「我的項目」建立項目，填寫名稱、題材、內容形式、故事簡介及承諾集數。建立後直接進入逐集創作，按承諾集數上傳、修改和提交作品。" },
   { title: "逐集創作與交付流程", category: "創作指南", text: "建立項目後，選擇第 1 集至承諾的最後一集，逐集上傳視頻並提交驗收。收到修改意見後可上傳新版本；所有版本和交付進度均保留在項目中。認證通過後才可正式發佈。" },
@@ -76,16 +77,16 @@ export function CreatorWorkspace({ catalog }: { catalog: CatalogWork[] }) {
     return () => { active = false; };
   }, []);
   useEffect(() => {
-    const applyHash = () => { const key = location.hash.slice(1).split("?")[0]; if (key === "reviews" || key === "agreements") { location.replace(`/admin/app#${key}`); return; } if (key === "ip" || key === "scripts") { setSection("projects"); history.replaceState(null, "", "#projects"); return; } if (key in titles) setSection(key as Section); };
+    const applyHash = () => { const key = location.hash.slice(1).split("?")[0]; if (key === "invites") { setSection("home"); history.replaceState(null, "", "#home"); return; } if (key === "reviews" || key === "agreements") { location.replace(`/admin/app#${key}`); return; } if (key === "ip" || key === "scripts") { setSection("projects"); history.replaceState(null, "", "#projects"); return; } if (key in titles) setSection(key as Section); };
     applyHash(); window.addEventListener("hashchange", applyHash); return () => window.removeEventListener("hashchange", applyHash);
   }, []);
   useEffect(() => { if (!notice) return; const timer = setTimeout(() => setNotice(""), 4500); return () => clearTimeout(timer); }, [notice]);
 
 
-  const navigate = (key: Section) => { setSection(key); setMobile(false); setProjectCreate(false); history.replaceState(null, "", `#${key}`); };
+  const navigate = (key: Section) => { if (key === "invites") key = "home"; setSection(key); setMobile(false); setProjectCreate(false); history.replaceState(null, "", `#${key}`); };
 
   const create = () => { if(team?.member&&!team.canEdit){setNotice("您沒有建立項目的權限");return;} if(!workspace){setLoginPrompt(true);return;}navigate("projects");setProjectCreate(true); };
-  const permitted=(key:Section)=>!team?.unavailable&&(!team?.member||["home","team","projects","messages","ai-tools","help","ranking","videos",...(hasPermission(team,"traffic.view")?["data"]:[]),...(hasPermission(team,"cooperation.view")?["invites"]:[]),...(hasPermission(team,"contract.summary.view")?["contracts"]:[])].includes(key));
+  const permitted=(key:Section)=>key!=="invites"&&!team?.unavailable&&(!team?.member||["home","team","projects","messages","ai-tools","help","ranking","videos",...(hasPermission(team,"traffic.view")?["data"]:[]),...(hasPermission(team,"cooperation.view")?["invites"]:[]),...(hasPermission(team,"contract.summary.view")?["contracts"]:[])].includes(key));
   const menuItem = (key: Section, label: string, Icon: typeof Home, child = false) => !permitted(key)?null:<button key={key} className={`cw-menu-item${section === key ? " is-active" : ""}${child ? " is-child" : ""}`} onClick={() => navigate(key)} aria-current={section === key ? "page" : undefined}>{!child && <Icon size={18} strokeWidth={1.65} />}<span>{label}</span></button>;
 
   if(!teamReady)return <div className="cw-card"><p>正在確認賬號權限…</p><button onClick={()=>location.reload()}>重新連接</button></div>;
@@ -101,11 +102,11 @@ export function CreatorWorkspace({ catalog }: { catalog: CatalogWork[] }) {
       <aside className={`cw-sidebar${mobile ? " is-open" : ""}`} aria-label="工作台導航">
         <div className="cw-sidebar-main">{menuItem("home", "首頁", Home)}
           {[
-            {id:"project",label:"項目管理",icon:FolderOpen,items:[["projects","我的項目"],["videos","視頻管理"],["invites","邀約管理"]]},
+            {id:"project",label:"項目管理",icon:FolderOpen,items:[["projects","我的項目"],["videos","視頻管理"]]},
             {id:"data",label:"數據中心",icon:BarChart3,items:[["data",team?.member?"作品流量":"作品收入數據"]]},
             {id:"settlement",label:"結算中心",icon:Wallet,items:[["settlement","賬戶收益"],["withdrawals","提現記錄"],["details","作品明細"]]},
           ].filter(group=>group.items.some(([key])=>permitted(key as Section))).map(group => <div key={group.id}>{group.id === "data" && menuItem("ai-tools", "AI 工具市場", Grid2X2)}<button className="cw-nav-group" aria-expanded={!collapsed.includes(group.id)} onClick={() => setCollapsed(value => value.includes(group.id) ? value.filter(id => id !== group.id) : [...value, group.id])}><span><group.icon size={17}/>{group.label}</span><ChevronDown size={13} className={!collapsed.includes(group.id) ? "is-expanded" : ""}/></button>{!collapsed.includes(group.id) && group.items.map(([key,label]) => menuItem(key as Section,label,FileText,true))}</div>)}
-          {team?.member&&!hasPermission(team,"traffic.view")&&menuItem("ai-tools","AI 工具市場",Grid2X2)}{menuItem("team","公司與團隊",UserRound)}
+          {team?.member&&!hasPermission(team,"traffic.view")&&menuItem("ai-tools","AI 工具市場",Grid2X2)}{menuItem("team","成員管理",UserRound)}
           {menuItem("contracts","合同管理",FileCheck2)}
           {!team?.member&&<button className="cw-nav-group" aria-expanded={!collapsed.includes("account")} onClick={() => setCollapsed(value => value.includes("account") ? value.filter(id => id !== "account") : [...value,"account"])}><span><UserRound size={17}/>賬號與信息管理</span><ChevronDown size={13} className={!collapsed.includes("account") ? "is-expanded" : ""}/></button>}
           {!collapsed.includes("account") && <>{menuItem("account","賬號信息",UserRound,true)}{menuItem("profile","創作者身份信息",UserRound,true)}{menuItem("signature","我的署名短劇",Film,true)}</>}
@@ -122,7 +123,7 @@ export function CreatorWorkspace({ catalog }: { catalog: CatalogWork[] }) {
 
         <VideoManager active={section === "videos"} />
 
-        {section === "home" && <WorkspaceDashboard workspace={workspace} catalog={catalog} articles={helpArticles} create={create} navigate={navigate} openArticle={setArticle}/> }
+        {section === "home" && (team&&(team.company||team.member)?<EnterpriseDashboard team={team} articles={helpArticles} navigate={navigate} openArticle={setArticle}/>:<WorkspaceDashboard workspace={workspace} catalog={catalog} articles={helpArticles} create={create} navigate={navigate} openArticle={setArticle}/>) }
 
         {section === "projects" && <ProductionCenter createRequested={projectCreate} onCreated={()=>{setProjectCreate(false);void refresh();}} />}
 
@@ -139,7 +140,7 @@ export function CreatorWorkspace({ catalog }: { catalog: CatalogWork[] }) {
         {section==="invites"&&team?.company?<TeamBusiness/>:["invites", "account", "signature"].includes(section)&&<SupplementaryPanel section={section} workspace={workspace} navigate={navigate}/> }
         {section === "contracts" && (team?.member?<TeamBusiness contractsOnly/>:<ContractCenter admin={Boolean(workspace?.viewer.admin)} />)}
 
-        {section === "profile" && <section className="cw-card"><p><Link className="cw-primary" href="/creator/verification">查看或補充身份認證</Link></p>{workspace ? <ProfileForm profile={workspace.profile} done={() => { void refresh(); setNotice("創作者資料已保存"); }} /> : <Empty icon={<UserRound />} title="建立你的創作者名片" text="登錄後設置筆名、擅長題材和個人介紹。" action={<button className="cw-primary" onClick={() => setLoginPrompt(true)}>登錄並完善資料</button>} />}</section>}
+        {section === "profile" && (team&&(team.company||team.member)?<EnterpriseIdentity team={team}>{workspace&&<ProfileForm profile={workspace.profile} done={() => { void refresh(); setNotice("創作者資料已保存"); }}/>}</EnterpriseIdentity>:<section className="cw-card"><p><Link className="cw-primary" href="/creator/verification">查看或補充身份認證</Link></p>{workspace ? <ProfileForm profile={workspace.profile} done={() => { void refresh(); setNotice("創作者資料已保存"); }} /> : <Empty icon={<UserRound />} title="建立你的創作者名片" text="登錄後設置筆名、擅長題材和個人介紹。" action={<button className="cw-primary" onClick={() => setLoginPrompt(true)}>登錄並完善資料</button>} />}</section>)}
         {section === "help" && <WorkspaceHelp articles={helpArticles} open={setArticle}/> }
 
         

@@ -70,6 +70,7 @@ export function VideoManager({ active }: { active: boolean }) {
   }, [active, step]);
   const [projects, setProjects] = useState<{ id: string; title: string; stage: string }[]>([]);
   const [projectsLoading, setProjectsLoading] = useState(true), [projectsError, setProjectsError] = useState(""), [projectsReload, setProjectsReload] = useState(0);
+  const [composerOpen,setComposerOpen]=useState(false);
   const [projectId, setProjectId] = useState(""), [episodeNumber, setEpisodeNumber] = useState(1), [episodeCount, setEpisodeCount] = useState(0);
   const [episodeSubmissions,setEpisodeSubmissions]=useState<{episodeNumber:number;state:string}[]>([]);
   const episodeState=episodeSubmissions.filter(item=>item.episodeNumber===episodeNumber);
@@ -132,6 +133,7 @@ export function VideoManager({ active }: { active: boolean }) {
       const [section, search] = location.hash.slice(1).split("?");
       const params = new URLSearchParams(search), id = params.get("project");
       if (section !== "videos" || !id) return;
+      setComposerOpen(true);
       const number = Number(params.get("episode") || 1);
       if (phase !== "idle") { if (id !== projectId || number !== episodeNumber) setError("請先完成或取消當前上傳，再切換項目和集數。"); return; }
       if (id !== projectId || number !== episodeNumber) setStep(1);
@@ -234,8 +236,8 @@ export function VideoManager({ active }: { active: boolean }) {
   }
   return <div className="cw-video-manager" style={active ? undefined : { display: "none" }}>
     
-    {!viewer && !permissions.member ? <section className="cw-card cw-video-login"><Film size={32} /><h2>{loading ? "正在連接視頻服務" : accessNotice.title}</h2><p>{listError || "正在確認賬號連接狀態…"}</p>{!loading&&accessNotice.action&&<a className="cw-primary" href={accessNotice.href}>{accessNotice.action}</a>}<button className="cw-primary" disabled={loading} onClick={() => void refresh()}>{loading?"連接中…":"重新連接"}</button></section> : permissions.canUpload?<form data-upload-busy={["uploading","paused","processing","publishing"].includes(phase)} ref={uploadForm} className="cw-card cw-video-form" onSubmit={publish}>
-      <div className="cw-card-title cw-upload-title"><a href={projectId ? `#projects?project=${encodeURIComponent(projectId)}` : "#projects"}><ArrowLeft size={17}/></a><h1 className="cw-page-title">{projectId ? `上傳第 ${episodeNumber} 集` : "上傳視頻"}</h1></div>
+    {!viewer && !permissions.member ? <section className="cw-card cw-video-login"><Film size={32} /><h2>{loading ? "正在連接視頻服務" : accessNotice.title}</h2><p>{listError || "正在確認賬號連接狀態…"}</p>{!loading&&accessNotice.action&&<a className="cw-primary" href={accessNotice.href}>{accessNotice.action}</a>}<button className="cw-primary" disabled={loading} onClick={() => void refresh()}>{loading?"連接中…":"重新連接"}</button></section> : permissions.canUpload?<form data-upload-busy={["uploading","paused","processing","publishing"].includes(phase)} ref={uploadForm} className="cw-card cw-video-form" style={composerOpen?undefined:{display:"none"}} onSubmit={publish}>
+      <div className="cw-card-title cw-upload-title"><a href={projectId ? `#projects?project=${encodeURIComponent(projectId)}` : "#projects"}><ArrowLeft size={17}/></a><h1 className="cw-page-title">{projectId ? `上傳第 ${episodeNumber} 集` : "上傳視頻"}</h1><button type="button" className="cw-outline" disabled={busy} onClick={()=>{setComposerOpen(false);history.replaceState(null,"","#videos");}}>返回視頻列表</button></div>
       <ol className="cw-upload-steps">{["填寫基本資料","上傳視頻","確認並提交","提交完成"].map((label,i)=><li key={label} aria-current={((phase==="published"||phase==="saved")?4:step)===i+1?"step":undefined} className={((phase==="published"||phase==="saved")?4:step)>=i+1?"is-current":""}><span>{((phase==="published"||phase==="saved")?4:step)>i+1?<Check size={13}/>:i+1}</span>{label}</li>)}</ol>
       <div style={{display:step===1?undefined:"none"}}>
       <section className="cu-context-card" aria-label="上傳歸屬">
@@ -279,15 +281,15 @@ export function VideoManager({ active }: { active: boolean }) {
         {error ? <p className="cw-error" role="alert">{error}</p> : null}
       </div></div>
     </form>:<section className="cw-card"><h1 className="cw-page-title">視頻管理</h1><p>可查看企業視頻及交付進度；上傳與修改請聯絡有創作權限的成員。</p></section>}
-    {(viewer || permissions.member) && <ProjectVideoList active={active} revision={projectRevision} />}
-    {viewer ? <section className="cw-card"><div className="cw-card-title"><h2>App 賬號獨立視頻 <span>未按漫劇 / 短劇歸類</span></h2><button className="cw-text-button" disabled={loading} onClick={() => void refresh(page)}><RefreshCw size={15} />{loading ? "讀取中…" : "刷新作品"}</button></div>
+    {(viewer || permissions.member) && !composerOpen && <ProjectVideoList active={active} revision={projectRevision} onUpload={()=>setComposerOpen(true)} />}
+    {viewer && !composerOpen ? <details className="cw-card rp-legacy"><summary>App 賬號歷史視頻（未分類）</summary><section><div className="cw-card-title"><h2>App 賬號獨立視頻 <span>未按漫劇 / 短劇歸類</span></h2><button className="cw-text-button" disabled={loading} onClick={() => void refresh(page)}><RefreshCw size={15} />{loading ? "讀取中…" : "刷新作品"}</button></div>
       <p className="cw-video-hint">以下為綁定 App 賬號的共用歷史記錄，不計入當前身份的項目統計。新作品請在對應身份下建立項目並上傳劇集。</p>
       {listError ? <p className="cw-error" role="alert">{listError}</p> : !items.length ? <p className="cw-video-empty">{loading ? "正在讀取作品…" : "當前頁暫無 App 獨立視頻。"}</p> : <div className="cw-video-grid">{items.map(item => <article className="cw-video-item" key={item.id}>
         {item.coverUrl ? <Image unoptimized width={640} height={360} src={item.coverUrl} alt={item.title} loading="lazy" /> : <div className="cw-video-placeholder"><Film size={28} /></div>}
         <div><span className="cw-pill">{item.status === "normal" ? "正常" : ["hidden", "pending", "review"].includes(item.status) ? "待展示" : "處理中"}</span><h3>{item.title}</h3><p>{item.description}</p><small>{item.views.toLocaleString()} 次播放 · <VideoDuration seconds={item.durationSeconds} src={item.videoUrl} /></small><button className="cw-text-button cw-video-delete" type="button" disabled={deleting} onClick={() => { setDeleteError(""); setDeleteTarget(item); }}><Trash2 size={14} />刪除</button></div>
       </article>)}</div>}
       <div className="cw-video-pagination"><button className="cw-outline" type="button" disabled={loading || page <= 1} onClick={() => void refresh(page - 1)}>上一頁</button><span>第 {page} 頁</span><button className="cw-outline" type="button" disabled={loading || !hasMore} onClick={() => void refresh(page + 1)}>下一頁</button></div>
-    </section> : null}
+    </section></details> : null}
     {deleteTarget ? <dialog ref={deleteDialog} className="cw-modal" aria-labelledby="cw-delete-video-title" onCancel={event => { event.preventDefault(); if (!deleting) setDeleteTarget(null); }}>
       <div className="cw-modal-head"><h2 id="cw-delete-video-title">刪除視頻</h2></div>
       <div className="cw-video-delete-confirm"><p>確定刪除《{deleteTarget.title}》嗎？刪除後 App 和官網將不再展示這條作品，無法在此恢復。</p>
