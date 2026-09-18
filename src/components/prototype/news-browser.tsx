@@ -11,11 +11,11 @@ import {
 import { useDeferredValue, useMemo, useState } from "react";
 
 import type { Article } from "@/content/types";
-import { NEWS_CATEGORY_LABELS, newsCategoryLabel } from "@/features/jyg/news-categories";
+import { PUBLIC_NEWS_CATEGORY_LABELS, newsCategoryLabel } from "@/features/jyg/news-categories";
 
 const NEWS_TABS = [
   { id: "all", label: "全部" },
-  ...NEWS_CATEGORY_LABELS.map((label) => ({ id: label, label: newsCategoryLabel(label), category: label })),
+  ...PUBLIC_NEWS_CATEGORY_LABELS.map((label) => ({ id: label, label: newsCategoryLabel(label), category: label })),
 ] as const;
 
 const PAGE_SIZE = 6;

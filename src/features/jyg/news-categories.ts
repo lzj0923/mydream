@@ -8,6 +8,9 @@ export const NEWS_CATEGORY_LABELS = [
 
 export type NewsCategoryLabel = typeof NEWS_CATEGORY_LABELS[number];
 
+// Keep the stored category available in the editor, but omit its public filter.
+export const PUBLIC_NEWS_CATEGORY_LABELS = NEWS_CATEGORY_LABELS.filter((label) => label !== "SEO文章");
+
 export function newsCategoryLabel(value: string): string {
   return value === NEWS_CATEGORY_LABELS[4] ? "公司動態" : value;
 }

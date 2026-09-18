@@ -28,10 +28,12 @@
 .jyg-work-detail-page .jyg-work-episode-player > header h2 { font-size: 24px; line-height: 1.5; }
 
 /* Keep the artwork visible: remove the stacked dark filters and heavy scrims. */
-.jyg-video-library-page .jyg-video-library-hero__art { filter: none; object-fit: contain; object-position: right center; }
-.jyg-video-library-page .jyg-video-library-hero__veil { background: linear-gradient(90deg, rgba(2,7,17,.8), rgba(2,7,17,.38) 50%, rgba(2,7,17,.08)); }
-.v2-article-page .v2-page-hero__background { filter: none; object-fit: cover; object-position: center; }
-.v2-article-page .v2-page-hero__scrim { background: linear-gradient(90deg, rgba(5,9,20,.9), rgba(5,9,20,.65) 48%, rgba(5,9,20,.12)), linear-gradient(0deg, #050914, transparent 35%); }
+.jyg-video-library-page .jyg-video-library-hero__art { filter: none; opacity: 1; object-fit: cover; object-position: center; }
+.jyg-video-library-page .jyg-video-library-hero__veil { background: linear-gradient(90deg, rgba(2,7,17,.7), rgba(2,7,17,.2) 45%, transparent 65%); }
+.jyg-video-library-page .jyg-video-library-hero__content { text-shadow: 0 2px 8px #020711; }
+.v2-article-page .v2-page-hero__background { filter: none; object-fit: cover; object-position: center 20%; }
+.v2-article-page .v2-page-hero__scrim { background: linear-gradient(90deg, rgba(5,9,20,.78), rgba(5,9,20,.45) 42%, transparent 70%); }
+.v2-article-page .v2-page-hero__glow { display: none; }
 .v2-article-page .v2-page-hero__copy { text-shadow: 0 2px 8px #020711; }
 .v2-download-page .v2-store-card__disabled,
 .v2-download-page .v2-store-card__copy p { font-size: 16px; line-height: 1.7; }
@@ -45,6 +47,33 @@
 .consumer-rights-readable li p { margin: 4px 0 0; color: #e6eef7; font-size: 18px; line-height: 1.8; }
 .consumer-rights-readable__shield { aspect-ratio: 1; display: grid; place-items: center; border: 1px solid #00c8f5; border-radius: 50%; box-shadow: 0 0 0 24px #00c8f50a, 0 0 0 48px #00c8f505, inset 0 0 50px #00c8f533; }
 .consumer-rights-readable__shield svg { width: 130px; height: 130px; color: #00d9f4; filter: drop-shadow(0 0 12px #00c8f5); stroke-width: 1.2; }
+
+/* Both account pages use the same form-first layout and readable type scale. */
+.account-login-page .account-login-shell { width: min(1200px, 100%); grid-template-columns: minmax(0, 520px) minmax(0, 1fr); grid-template-areas: "form intro"; gap: clamp(40px, 5vw, 80px); }
+.account-login-page .account-login-card { grid-area: form; min-width: 0; }
+.account-login-page .account-login-intro { grid-area: intro; min-width: 0; }
+.account-login-page .account-login-intro > p { font-size: 18px; }
+.account-login-page .account-login-intro > div b { font-size: 20px; }
+.account-login-page .account-login-intro > div small { font-size: 16px; line-height: 1.7; }
+.account-login-page .account-login-card__heading h2 { font-size: 36px; }
+.account-login-page .account-login-card__heading p,
+.account-login-page .account-login-card label,
+.account-login-page .account-social-login button,
+.account-login-page .account-register-entry { font-size: 16px; line-height: 1.65; }
+.account-login-page .account-login-card input { font-size: 16px; }
+.account-login-page .account-login-card form > button { font-size: 18px; }
+.account-login-page .account-login-note,
+.account-login-page .account-login-divider,
+.account-login-page .account-login-card form .account-code-button { font-size: 14px; line-height: 1.6; }
+.account-login-page .account-social-login button { min-height: 48px; height: auto; padding-block: 10px; }
+
+.jyg-navbar .jyg-nav-links a { font-size: 16px; padding-inline: 12px; }
+.jyg-navbar .jyg-nav-action { font-size: 14px; padding-inline: 14px; }
+.jyg-navbar .jyg-brand__descriptor b { font-size: 14px; }
+
+@media (max-width: 900px) {
+  .account-login-page .account-login-shell { grid-template-columns: minmax(0, 1fr); grid-template-areas: "form" "intro"; max-width: 560px; gap: 40px; }
+}
 
 @media (max-width: 700px) {
   .v2-download-page .v2-store-grid { grid-template-columns: minmax(0, 1fr); gap: 24px; }

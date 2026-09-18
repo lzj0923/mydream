@@ -22,6 +22,7 @@ import {
   buildNewsIndexModel,
 } from "@/features/jyg/news-model";
 import { managedNewsArticle, managedNewsArticles } from "@/features/jyg/managed-news";
+import { NEWS_CATEGORY_LABELS, PUBLIC_NEWS_CATEGORY_LABELS, newsCategoryLabel } from "@/features/jyg/news-categories";
 import { shouldInitializePageMotion } from "@/lib/motion/runtime";
 import { duplicateEpisodeNumbers, nextVisibleEpisodeNumber } from "@/features/admin/episode-batch-model";
 import { nextAvailableContentSlug } from "@/features/admin/content-slug";
@@ -648,12 +649,14 @@ test("news editor exposes the company dynamics category", () => {
   assert.match(categories, /company-news/);
 });
 
-test("news frontend filters share every category exposed by the admin editor", () => {
+test("news public filters omit SEO while preserving the stored editor category", () => {
   const browser = readFileSync("src/components/prototype/news-browser.tsx", "utf8");
   const editor = readFileSync("src/app/admin/admin-console.tsx", "utf8");
   const categories = readFileSync("src/features/jyg/news-categories.ts", "utf8");
-  assert.match(browser, /NEWS_CATEGORY_LABELS/);
+  assert.match(browser, /PUBLIC_NEWS_CATEGORY_LABELS\.map/);
   assert.match(editor, /NEWS_CATEGORY_LABELS/);
+  assert.deepEqual(PUBLIC_NEWS_CATEGORY_LABELS.map(newsCategoryLabel), ["活動公告", "平台消息", "品牌動態", "公司動態"]);
+  assert.ok(NEWS_CATEGORY_LABELS.includes("SEO文章"));
   for (const label of ["活動公告", "SEO文章", "平台消息", "品牌動態", "公司动态"]) {
     assert.match(categories, new RegExp(label));
   }
