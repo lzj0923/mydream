@@ -8,6 +8,7 @@ import {
   Lightbulb,
   Send,
   ShieldCheck,
+  Sparkles,
   Users,
 } from "lucide-react";
 import { useState, type CSSProperties, type FormEvent } from "react";
@@ -30,14 +31,15 @@ type ContactFormState = {
 const emptyContactForm = (): ContactFormState => ({ company: "", name: "", phone: "", email: "", website: "", cooperationNeeds: [], discoverySource: "", message: "", consent: false });
 
 const collaborationTracks = [
-  { icon: BadgeCheck, title: "IP授權", description: "角色、世界觀與跨媒體內容授權。" },
-  { icon: Handshake, title: "品牌合作", description: "共同建立具有辨識度的品牌故事。" },
-  { icon: Globe2, title: "海外市場", description: "跨語言發行、在地化與市場連結。" },
-  { icon: Users, title: "創作者合作", description: "串接創作者與 AI 原創內容生態。" },
+  { icon: BadgeCheck, english: "IP LICENSING", title: "IP授權", description: "角色、世界觀與跨媒體內容授權。" },
+  { icon: Handshake, english: "BRAND PARTNERSHIP", title: "品牌合作", description: "共同建立具有辨識度的品牌故事。" },
+  { icon: Globe2, english: "GLOBAL MARKET", title: "海外市場", description: "跨語言發行、在地化與市場連結。" },
+  { icon: Users, english: "CREATOR NETWORK", title: "創作者合作", description: "串接創作者與 AI 原創內容生態。" },
 ] as const;
 
 export function JygBusinessCollaboration({
   embedded = false,
+  referenceDesign = false,
   heading = "商業合作／聯絡我們",
   eyebrow = "BUSINESS COLLABORATION · 04",
   description = "串聯原創 IP、品牌與全球市場，\n一起創造下一個娛樂新世界。",
@@ -45,6 +47,7 @@ export function JygBusinessCollaboration({
   style,
 }: {
   embedded?: boolean;
+  referenceDesign?: boolean;
   heading?: string;
   eyebrow?: string;
   description?: string;
@@ -92,7 +95,7 @@ export function JygBusinessCollaboration({
   };
 
   return (
-    <div className={`jyg-prototype jyg-business-collab-page${embedded ? " is-embedded" : ""}`} data-cms-zone={cmsZone} style={style}>
+    <div className={`jyg-prototype jyg-business-collab-page${embedded ? " is-embedded" : ""}${referenceDesign ? " jyg-business-reference" : ""}`} data-cms-zone={cmsZone} style={style}>
       <span className="jyg-business-collab-page__grid" aria-hidden />
       <span className="jyg-business-collab-page__glow" aria-hidden />
 
@@ -108,6 +111,7 @@ export function JygBusinessCollaboration({
         <div className="jyg-business-collab-layout">
           <form className="jyg-business-collab-form" onSubmit={submit}>
             <header className="jyg-business-collab-form__intro">
+              {referenceDesign && <span><Sparkles aria-hidden /> LET&apos;S CREATE TOGETHER</span>}
               <h2>想強化您的品牌實力，<br />甚至拓展新的市場行銷嗎？</h2>
               <p>讓我們一起聊聊您的想法，請填寫以下表單，我們將儘速與您聯繫。</p>
             </header>
@@ -147,14 +151,18 @@ export function JygBusinessCollaboration({
           </form>
 
           <aside className="jyg-business-collab-card">
+            {referenceDesign && <>
+              <span className="jyg-business-collab-card__orbit" aria-hidden><i /><i /></span>
+              <span className="jyg-business-collab-card__eyebrow">CREATE THE NEXT IMPACT</span>
+            </>}
             <h2>共創品牌力<br /><strong>一起拓展未來</strong></h2>
             <p>從世界觀、原創角色到跨市場合作，讓每一次合作都成為品牌成長的新入口。</p>
 
             <div className="jyg-business-collab-tracks">
-              {collaborationTracks.map(({ icon: Icon, title, description }) => (
+              {collaborationTracks.map(({ icon: Icon, english, title, description }) => (
                 <article key={title}>
                   <Icon aria-hidden />
-                  <div><h3>{title}</h3><p>{description}</p></div>
+                  <div>{referenceDesign && <small>{english}</small>}<h3>{title}</h3><p>{description}</p></div>
                   <ArrowUpRight aria-hidden />
                 </article>
               ))}

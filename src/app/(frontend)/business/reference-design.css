@@ -1,0 +1,51 @@
+/* Details from Downloads/my-dream-official, scoped to the IP licensing route.
+   Keep the site's shared, readable heading and form typography. */
+.jyg-business-reference .jyg-business-collab-heading > div > [data-cms-field="eyebrow"] {
+  display: inline-block;
+}
+
+.jyg-business-reference .jyg-business-collab-heading > p {
+  white-space: pre-line;
+}
+
+.jyg-business-reference .jyg-business-collab-card__eyebrow {
+  position: relative;
+  z-index: 2;
+  color: #5ad8f5;
+}
+
+.jyg-business-reference .jyg-business-collab-card__orbit {
+  position: absolute;
+  width: 220px;
+  height: 100px;
+  right: -62px;
+  top: -20px;
+  border: 1px solid rgba(244,183,63,.28);
+  border-radius: 50%;
+  transform: rotate(-13deg);
+  pointer-events: none;
+}
+
+.jyg-business-reference .jyg-business-collab-card__orbit i:first-child {
+  position: absolute;
+  width: 7px;
+  height: 7px;
+  left: 35px;
+  bottom: 10px;
+  border-radius: 50%;
+  background: #f4b73f;
+  box-shadow: 0 0 16px #f4b73f;
+}
+
+.jyg-business-reference .jyg-business-collab-card__orbit i:last-child {
+  position: absolute;
+  inset: 12px;
+  border: 1px solid rgba(25,191,255,.15);
+  border-radius: inherit;
+}
+
+.jyg-business-reference .jyg-business-collab-tracks small {
+  color: #8aa7c1;
+  font-size: 10px;
+  letter-spacing: .1em;
+}
